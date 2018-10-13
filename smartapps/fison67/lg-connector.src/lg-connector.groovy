@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.1)
+ *  LG Connector (v.0.0.2)
  *
  * MIT License
  *
@@ -191,39 +191,47 @@ def addDevice(){
     log.debug("DNI >> " + dni)
     def chlid = getChildDevice(dni)
     if(!child){
-        def dth = "LG TV";
+        def dth = ""
         if(type == "tv"){
-        	dth = "LG TV";
+        	dth = "LG TV"
+        }else if(type == "washer"){
+        	dth = "LG Washer"
+        }else if(type == "refrigerator"){
+        	dth = "LG Refrigerator"
         }
-        def name = dth;
         
-        def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
-            "label": dth
-        ])    
-        childDevice.setInfo(settings.address, address)
-        log.debug "Success >> ADD Device DNI=${dni} ${name}"
+        def name = dth;
+        if(dth != ""){
+        	def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
+                "label": dth
+            ])    
+            childDevice.setInfo(settings.address, address)
+            log.debug "Success >> ADD Device DNI=${dni} ${name}"
 
-        try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
-
-        def resultString = new groovy.json.JsonOutput().toJson("result":"ok")
-        render contentType: "application/javascript", data: resultString
+            try{ childDevice.setLanguage(settings.selectedLang) }catch(e){}
+            render contentType: "application/javascript", data: new groovy.json.JsonOutput().toJson("result":"ok")
+        }else{
+            render contentType: "application/javascript", data: new groovy.json.JsonOutput().toJson("result":"nonExist")
+        }
+        
+        
     }
 }
 
 def updateDevice(){
     def address = params.id
     def dni = "lg-connector-" + address
-    log.debug "update dni >> " + dni
     def chlid = getChildDevice(dni)
     if(chlid){
 		chlid.setStatus(params)
+    }else{
+    	log.debug "No DTH..... ${data.key} >> ${data.data}"
     }
     def resultString = new groovy.json.JsonOutput().toJson("result":true)
     render contentType: "application/javascript", data: resultString
 }
 
 def getDeviceList(){
-	log.debug "getDeviceList"
 	def list = getChildDevices();
     def resultList = [];
     list.each { child ->
