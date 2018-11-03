@@ -1,5 +1,5 @@
 /**
- *  LG Refrigerator(v.0.0.1)
+ *  LG Refrigerator(v.0.0.2)
  *
  * MIT License
  *
@@ -30,13 +30,14 @@
 import groovy.json.JsonSlurper
 
 metadata {
-	definition (name: "LG Refrigerator", namespace: "fison67", author: "fison67") {
+	definition (name: "LG Refrigerator", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-contact") {
         capability "Sensor"
         capability "Contact Sensor"
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Configuration"
         capability "Lock"
+        capability "Refresh"
         
         
         command "setStatus"
@@ -139,20 +140,20 @@ def setStatus(data){
     }
     
     if(jsonObj.TempRefrigerator){
-    	sendEvent(name:"temperature", value: jsonObj.TempRefrigerator as int)
-    	sendEvent(name:"level", value: jsonObj.TempRefrigerator as int)
+    	sendEvent(name:"temperature", value: jsonObj.TempRefrigerator.rValue as int)
+    	sendEvent(name:"level", value: jsonObj.TempRefrigerator.rValue as int)
 	}
     if(jsonObj.TempFreezer){
-    	sendEvent(name:"temperature2", value: jsonObj.TempFreezer as int)
+    	sendEvent(name:"temperature2", value: jsonObj.TempFreezer.rValue as int)
     }
     if(jsonObj.FreshAirFilter){
-    	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter)
+    	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter.rValue)
     }
     if(jsonObj.SmartSavingModeStatus){
-    	sendEvent(name:"smartSavingMode", value: jsonObj.SmartSavingModeStatus)
+    	sendEvent(name:"smartSavingMode", value: jsonObj.SmartSavingModeStatus.rValue)
     }
     if(jsonObj.LockingStatus){
-    	sendEvent(name:"lock", value: jsonObj.LockingStatus == "UNLOCK" ? "unlocked" : "locked")
+    	sendEvent(name:"lock", value: jsonObj.LockingStatus.rValue == "UNLOCK" ? "unlocked" : "locked")
     }
     
     updateLastTime();
