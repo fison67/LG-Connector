@@ -1,5 +1,5 @@
 /**
- *  LG Washer(v.0.0.1)
+ *  LG Warsher(v.0.0.2)
  *
  * MIT License
  *
@@ -36,6 +36,8 @@ metadata {
         capability "Configuration"
         
         command "setStatus"
+        
+        attribute "leftMinute", "number"
 	}
 
 	simulator {
@@ -137,6 +139,10 @@ def setData(dataList){
 * {"Remain_Time_H":0,"Remain_Time_M":7,"Initial_Time_H":0,"Initial_Time_M":11,"APCourse":"스피드워시","Error":"No Error","SoilLevel":"선택 안함","WaterTemp":"선택 안함","DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"TCLCount":2,"LoadLevel":1}
 * {"State":"전원 OFF","PreState":"대기 중"}}
 * {"State":"대기 중","Remain_Time_H":0,"Remain_Time_M":0,"Initial_Time_H":0,"Initial_Time_M":0,"Error":"No Error","SoilLevel":"선택 안함","SpinSpeed":"선택 안함","WaterTemp":"선택 안함","RinseCount":"선택 안함","DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"PreState":"전원 OFF","TCLCount":2,"LoadLevel":0}
+* {"State":28,"Remain_Time_H":0,"Remain_Time_M":5,"Initial_Time_H":0,"Initial_Time_M":27,"APCourse":"스피드워시","Error":"No Error","SoilLevel":"선택 안함","SpinSpeed":3,"WaterTemp":"선택 안함","RinseCount":"선택 안함","DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"Option1":0,"Option2":4,"Option3":0,"PreState":1,"SmartCourse":33,"TCLCount":30,"OPCourse":0,"LoadLevel":2}
+* {"State":17,"Remain_Time_H":0,"Remain_Time_M":29,"Initial_Time_H":0,"Initial_Time_M":31,"APCourse":"스피드워시","Error":"No Error","SoilLevel":2,"SpinSpeed":3,"WaterTemp":3,"RinseCount":2,"DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"Option1":0,"Option2":4,"Option3":0,"PreState":14,"SmartCourse":33,"TCLCount":31,"OPCourse":0,"LoadLevel":3}
+* {"State":17,"Remain_Time_H":0,"Remain_Time_M":20,"Initial_Time_H":0,"Initial_Time_M":31,"APCourse":"스피드워시","Error":"No Error","SoilLevel":2,"SpinSpeed":3,"WaterTemp":3,"RinseCount":2,"DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"Option1":0,"Option2":4,"Option3":0,"PreState":14,"SmartCourse":33,"TCLCount":31,"OPCourse":0,"LoadLevel":3}
+
 */
 def setStatus(data){
 	log.debug "Update >> ${data.key} >> ${data.data}"
@@ -144,20 +150,24 @@ def setStatus(data){
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.State != null){
-    	sendEvent(name:"apCourse", value: jsonObj.State)
+    	if(jsonObj.State.rValue == "전원 OFF" || jsonObj.State.rValue == "0"){
+        	sendEvent(name:"switch", value: "off")
+        }else{
+        	sendEvent(name:"switch", value: "on")
+        }
     }
     
     if(jsonObj.APCourse != null){
-    	sendEvent(name:"apCourse", value: jsonObj.APCourse)
+    	sendEvent(name:"apCourse", value: jsonObj.APCourse.rValue)
 	}
     
     if(jsonObj.Remain_Time_H != null){
-    	state.remainTimeH = changeTime(jsonObj.Remain_Time_H)
+    	state.remainTimeH = changeTime(jsonObj.Remain_Time_H.rValue)
 	}
     if(jsonObj.Remain_Time_M != null){
-    	state.remainTimeM = changeTime(jsonObj.Remain_Time_M)
+    	state.remainTimeM = changeTime(jsonObj.Remain_Time_M.rValue)
 	}
-    
+    /*
     if(jsonObj.TCLCount != null){
     	sendEvent(name:"tlcCount", value: jsonObj.TCLCount)
 	}
@@ -174,8 +184,9 @@ def setStatus(data){
     if(jsonObj.SoilLevel != null){
     	sendEvent(name:"soilLevel", value: jsonObj.SoilLevel)
 	}
-    
-    sendEvent(name:"leftTime", value: state.remainTimeH + ":" + state.remainTimeM)
+    */
+    sendEvent(name:"leftTime", value: state.remainTimeH + ":" + state.remainTimeM + ":00")
+    sendEvent(name:"leftMinute", value: jsonObj.Remain_Time_H.rValue * 60 + jsonObj.Remain_Time_M.rValue)
 
     updateLastTime();
 }
