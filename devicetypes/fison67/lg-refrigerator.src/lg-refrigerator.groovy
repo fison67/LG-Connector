@@ -133,8 +133,8 @@ def setStatus(data){
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.DoorOpenState){
-        sendEvent(name:"contact", value: (jsonObj.DoorOpenState == "CLOSE" ? "closed" : "open"))
-        if(jsonObj.DoorOpenState == "OPEN"){
+        sendEvent(name:"contact", value: (jsonObj.DoorOpenState.rValu == "CLOSE" ? "closed" : "open"))
+        if(jsonObj.DoorOpenState.rValu == "OPEN"){
             sendEvent(name:"lastOpen", value: new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone))
         }
     }
