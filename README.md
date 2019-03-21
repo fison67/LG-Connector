@@ -204,3 +204,11 @@ Update Click
 12. Click on the "Update" button
 ```
 Step 3 and 4 are only needed if the repo has not been added earlier (e.g. in the DTH installation).
+
+
+
+
+
+# License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
