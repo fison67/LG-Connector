@@ -142,7 +142,7 @@ WIND_VALUE = [
     2053: [val:"@AC_MAIN_WIND_STRENGTH_AUTO_LEFT_W|AC_MAIN_WIND_STRENGTH_MID_HIGH_RIGHT_W", str:"Auto Left & Mid High Right"],
     2054: [val:"@AC_MAIN_WIND_STRENGTH_AUTO_LEFT_W|AC_MAIN_WIND_STRENGTH_HIGH_RIGHT_W", str:"Auto Left & High Right"],
     2055: [val:"@AC_MAIN_WIND_STRENGTH_AUTO_LEFT_W|AC_MAIN_WIND_STRENGTH_POWER_RIGHT_W", str:"Auto Left & Power Right"],
-    2056: [val:"@AC_MAIN_WIND_STRENGTH_AUTO_LEFT_W|AC_MAIN_WIND_STRENGTH_AUTO_RIGHT_W", str:"Auto All"],
+    2056: [val:"@AC_MAIN_WIND_STRENGTH_AUTO_LEFT_W|AC_MAIN_WIND_STRENGTH_AUTO_RIGHT_W", str:"Auto Left & Auto Right"],
     2303: [val:"@AC_MAIN_WIND_STRENGTH_AUTO_LEFT_W", str:"Auto Left"],
     2313: [val:"@AC_MAIN_WIND_STRENGTH_LONGPOWER_LEFT_W|AC_MAIN_WIND_STRENGTH_LONGPOWER_RIGHT_W", str:"Long Power All"],
     2570: [val:"@AC_MAIN_WIND_STRENGTH_SHOWER_LEFT_W|AC_MAIN_WIND_STRENGTH_SHOWER_RIGHT_W", str:"Shower All"],
@@ -177,6 +177,12 @@ metadata {
         command "evergySavingMode"
         
         command "wind", ["number"]
+        command "wind1"
+        command "wind2"
+        command "wind3"
+        command "wind4"
+        command "wind5"
+        command "wind6"
         
         command "setStatus"
         command "control", ["string", "string"]
@@ -362,9 +368,26 @@ def wind(val){
 	makeCommand("SetWindStrength", '{"WindStrength":"' + val + '"}')
 }
 
-def windSlow(){
-    wind(2303)
+def wind1(){
+    wind(wind1)
 }
+def wind2(){
+    wind(wind2)
+}
+def wind3(){
+    wind(wind3)
+}
+def wind4(){
+    wind(wind4)
+}
+def wind5(){
+    wind(wind5)
+}
+def wind6(){
+    wind(wind6)
+}
+
+
 
 def on(){
 	makeCommand("SetOperation", "257")
