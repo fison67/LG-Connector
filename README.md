@@ -1,7 +1,7 @@
 # LG Connector
 Connector for LG devices with [SmartThings](https://www.smartthings.com/getting-started)
 
-Simplifies the setup of Xiaomi devices with SmartThings.<br/>
+Simplifies the setup of LG devices with SmartThings.<br/>
 If LG Connector is installed, virtual devices are registered automatically by the LG Connector SmartApp.<br/>
 You don't have to do anything to add LG devices in SmartThings IDE.
 
@@ -139,3 +139,68 @@ docker run -d --restart=always -v /docker/lg-connector:/config --name=lg-connect
 5. Restart LG Connector Docker container
 ```
 
+
+## Install Device Type Handler (DTH)
+
+### Manual install
+```
+Go to the SmartThings IDE
+Click My Device Handlers
+Click Create New Device Handlers
+Copy content of file in the devicetypes/fison67 folder to the area
+Click Create
+Loop until all of file is registered
+```
+
+### Install DTH using the GitHub Repo integration
+> Enable the GitHub integration before continuing the installation. Perform step 1 and 2 in the [SmartThings guide](https://docs.smartthings.com/en/latest/tools-and-ide/github-integration.html#step-1-enable-github-integration) to enable the GitHub integration for your SmartThings account.
+
+```
+1. Go to the SmartThings IDE
+2. Select the My Device Handlers tab
+3. Click on the "Settings" button
+4. Click on the "Add new repository" option and fill in the following information:
+    Owner: fison67
+    Name: LG-Connector
+    Branch: master
+5. Click on the "Save" button
+6. Click on the "Update from Repo" button and select the "LG-Connector (master)" option
+7. Check the checkbox for the device types you need (or all of them) in the "New (only in GitHub)" column
+8. Check the "Publish" checkbox and click on the "Execute Update" button
+```
+
+## Install SmartApp
+See the [Manual](doc/install/smartapp/README.md) file for details
+```
+Connect to the SmartThings IDE
+Click My SmartApps
+Click New SmartApp
+Click From Code
+Copy content of lg_connector.groovy & Paste
+Click Create
+Click My SmartApps & Edit properties (LG Connector)
+Enable OAuth
+Update Click
+```
+
+### Install SmartApp using the GitHub Repo integration
+> Enable the GitHub integration before continuing the installation. Perform step 1 and 2 in the [SmartThings guide](https://docs.smartthings.com/en/latest/tools-and-ide/github-integration.html#step-1-enable-github-integration) to enable the GitHub integration for your SmartThings account.
+
+```
+1. Go to the SmartThings IDE
+2. Select the My SmartApps tab
+3. Click on the Settings button
+4. Click on the "Add new repository" option and fill in the following information:
+    Owner: fison67
+    Name: LG-Connector
+    Branch: master
+5. Click on the "Save" button
+6. Click on the "Update from Repo" button and select the "LG-Connector (master)" option
+7. Check the checkbox for the device types you need (or all of them) in the "New (only in GitHub)" column
+8. Check the "Publish" checkbox and click on the "Execute Update" button
+9. Select the My SmartApps tab
+10. Click on the "Edit Properties" button for the LG Connector SmartApp (fison67 : LG Connector)
+11. Click on the "OAuth" option and click on the "Enable OAuth" button
+12. Click on the "Update" button
+```
+Step 3 and 4 are only needed if the repo has not been added earlier (e.g. in the DTH installation).
