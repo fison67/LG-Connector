@@ -35,7 +35,7 @@ If this project helps you, you can give me a cup of coffee<br/>
 		- [Manual install](#manual-install)
 		- [Install DTH using the GitHub Repo integration](#install-dth-using-the-github-repo-integration)
 	- [Install SmartApp](#install-smartapp)
-		- [Install SmartApp using the GitHub Repo integration](#install-smartapp--using-the-github-repo-integration)
+		- [Install SmartApp using the GitHub Repo integration](#install-smartapp-using-the-github-repo-integration)
 - [Library](#library)
 - [License](#license)
 
