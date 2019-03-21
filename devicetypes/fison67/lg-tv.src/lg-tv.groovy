@@ -33,8 +33,10 @@ metadata {
 	definition (name: "LG TV", namespace: "fison67", author: "fison67") {
         capability "Switch"
         capability "Switch Level"
-        capability "Configuration"
         capability "Tv Channel"
+        capability "Audio Mute"
+        capability "Audio Volume"
+        capability "Media Input Source"
         capability "Speech Synthesis"
         
         command "playText", ["string"]
@@ -43,8 +45,8 @@ metadata {
         command "stop"
         
         command "setStatus"
-        command "mute"
-        command "unmute"
+    //    command "mute"
+    //    command "unmute"
         command "goTV"
         command "goNetflix"
         command "goHdmi1"
@@ -84,8 +86,8 @@ metadata {
 			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Updated: ${currentValue}')
             }
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"setLevel"
+            tileAttribute ("device.volume", key: "SLIDER_CONTROL") {
+                attributeState "volume", action:"setVolume"
             }     
 		}
         
@@ -276,10 +278,10 @@ def setStatus(data){
 			sendEvent(name:"switch", value: jsonObj.data )
             break; 
         case "volume":
-			sendEvent(name:"level", value: jsonObj.data as int )
+			sendEvent(name:"volume", value: jsonObj.data as int )
             break;
         case "mute":
-			sendEvent(name:"mute", value: jsonObj.data == "true" ? "mute" : "unmuted" )
+			sendEvent(name:"mute", value: jsonObj.data ? "mute" : "unmuted" )
             break;
         case "input":
         	updateInput(jsonObj.data)
@@ -336,6 +338,8 @@ def updateInput(name){
         break;
     }
 	sendEvent(name:"inputSource", value: title)
+    
+    
 }
 
 def updateLastTime(){
@@ -374,8 +378,16 @@ def unmute(){
 	makeCommand("mute", false)
 }
 
-def setLevel(level){
-    makeCommand("volume", level as int)
+def setVolume(volume){
+    makeCommand("volume", volume as int)
+}
+
+def volumeUp(){
+	makeCommand("volume", (device.currentValue("volume") as int) + 1)
+}
+
+def volumeDown(){
+	makeCommand("volume", (device.currentValue("volume") as int) - 1)
 }
 
 def mediaPlay(){
