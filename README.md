@@ -51,14 +51,19 @@ Added support devices.
 
 
 # Documentation
+<br/><br/>
 
 ## Management Web Desktop Version
+<br/><br/>
 
 ## Management Web Mobile Version
+<br/><br/>
 
 ## DTH Example
+<br/><br/>
 
 ## Supported Devices
+<br/><br/>
 
 
 
@@ -67,6 +72,16 @@ Added support devices.
 ## Prerequisites
 * SmartThings account
 * Local server (Synology NAS, Raspberry Pi, Linux Server) with Docker installed
+
+
+## Docker Versions
+
+### Stable Versions
+| Docker tag |
+| ------------- |
+|fison67/lg-connector:0.0.2|
+|fison67/lg-connector-rasp:0.0.2|
+
 
 ## Install LG Connector API Server
 ### Raspberry Pi
