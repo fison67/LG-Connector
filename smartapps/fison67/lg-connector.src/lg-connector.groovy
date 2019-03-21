@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.2)
+ *  LG Connector (v.0.0.3)
  *
  * MIT License
  *
@@ -198,6 +198,8 @@ def addDevice(){
         	dth = "LG Washer"
         }else if(type == "refrigerator"){
         	dth = "LG Refrigerator"
+        }else if(type == "ac"){
+        	dth = "LG Air Conditioner"
         }
         
         def name = dth;
@@ -219,13 +221,15 @@ def addDevice(){
 }
 
 def updateDevice(){
-    def address = params.id
+    def data = request.JSON
+    
+    def address = data.id
     def dni = "lg-connector-" + address
     def chlid = getChildDevice(dni)
     if(chlid){
-		chlid.setStatus(params)
+		chlid.setStatus(data)
     }else{
-    	log.debug "No DTH..... ${data.key} >> ${data.data}"
+    	log.debug "No DTH..... ${data}"
     }
     def resultString = new groovy.json.JsonOutput().toJson("result":true)
     render contentType: "application/javascript", data: resultString
@@ -272,7 +276,6 @@ mappings {
         path("/list")                         	{ action: [GET: "authError"]  }
         path("/update")                         { action: [POST: "authError"]  }
         path("/add")                         	{ action: [POST: "authError"]  }
-
     } else {
         path("/config")                         { action: [GET: "renderConfig"]  }
         path("/list")                         	{ action: [GET: "getDeviceList"]  }
