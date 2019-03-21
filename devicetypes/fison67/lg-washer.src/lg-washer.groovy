@@ -1,5 +1,5 @@
 /**
- *  LG Warsher(v.0.0.2)
+ *  LG Warsher(v.0.0.3)
  *
  * MIT License
  *
@@ -28,34 +28,60 @@
 */
  
 import groovy.json.JsonSlurper
+import groovy.transform.Field
+
+@Field
+STATE_VALUE = [
+    0: [val: "@WM_STATE_POWER_OFF_W", str: ["EN":"POWER OFF", "KR":"전원 OFF"] ],
+    5: [val: "@WM_STATE_INITIAL_W", str: ["EN":"INITIAL", "KR":"대기 중"] ],
+    6: [val: "@WM_STATE_PAUSE_W", str: ["EN":"PAUSE", "KR":"일시정지 중"] ],
+    7: [val: "@WM_STATE_ERROR_AUTO_OFF_W", str: ["EN":"ERROR", "KR":"에러 발생"] ],
+    10: [val: "@WM_STATE_RESERVE_W", str: ["EN":"RESERVE", "KR":"예약 중"] ],
+    20: [val: "@WM_STATE_DETECTING_W", str: ["EN":"DETECTING", "KR":"옷감량 확인 중"] ],
+    21: [val: "WM_STATE_ADD_DRAIN_W", str: ["EN":"?", "KR":"?"] ],
+    22: [val: "@WM_STATE_DETERGENT_AMOUNT_W", str: ["EN":"DETERGENT AMOUNT", "KR":"세제량 안내 중"] ],
+    23: [val: "@WM_STATE_RUNNING_W", str: ["EN":"RUNNING", "KR":"세탁 중"] ],
+    24: [val: "@WM_STATE_PREWASH_W", str: ["EN":"PREWASH", "KR":"애벌세탁 중"] ],
+    30: [val: "@WM_STATE_RINSING_W", str: ["EN":"RINSING", "KR":"헹굼 중"] ],
+    31: [val: "@WM_STATE_RINSE_HOLD_W", str: ["EN":"RINSE HOLD", "KR":"헹굼 대기 상태"] ],
+    40: [val: "@WM_STATE_SPINNING_W", str: ["EN":"SPINNING", "KR":"탈수 중"] ],
+    50: [val: "@WM_STATE_DRYING_W", str: ["EN":"DRYING", "KR":"건조 중"] ],
+    60: [val: "@WM_STATE_END_W", str: ["EN":"END", "KR":"종료 상태"] ],
+    61: [val: "@WM_STATE_FRESHCARE_W", str: ["EN":"FRESHCARE", "KR":"구김방지 중"] ],
+    76: [val: "DEMO_MODE_NEWMOTION_PAUSE", str: ["EN":"?", "KR":"?"] ],
+    77: [val: "DEMO_MODE_NEWMOTION_START", str: ["EN":"?", "KR":"?"] ],
+    81: [val: "TCL_ALARM_NORMAL", str: ["EN":"?", "KR":"?"] ],
+    83: [val: "@WM_STATE_FROZEN_PREVENT_INITIAL_W", str: ["EN":"FROZEN PREVENT INITIAL", "KR":"동결방지 모드 대기 중"] ],
+    84: [val: "@WM_STATE_FROZEN_PREVENT_RUNNING_W", str: ["EN":"FROZEN PREVENT RUNNING", "KR":"동결방지 모드 실행 중"] ],
+    85: [val: "@WM_STATE_FROZEN_PREVENT_PAUSE_W", str: ["EN":"FROZEN PREVENT PAUSE", "KR":"동결방지 모드 일시정지 중"] ],
+    101: [val: "WM_STATE_AUDIBLE_DIAGNOSIS_W", str: ["EN":"?", "KR":"?"] ]
+]
 
 metadata {
 	definition (name: "LG Washer", namespace: "fison67", author: "fison67") {
-        capability "Switch"
+        capability "Sensor"
         capability "Switch Level"
         capability "Configuration"
         
         command "setStatus"
         
         attribute "leftMinute", "number"
+        attribute "prvState", "string"
+        attribute "curState", "string"
 	}
 
 	simulator {
 	}
     
 	preferences {
-    
+        input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
 	}
 
 	tiles(scale: 2) {
 		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-             	attributeState "on", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
+        multiAttributeTile(name:"curState", type: "generic", width: 6, height: 2){
+			tileAttribute ("device.curState", key: "PRIMARY_CONTROL") {
+             	attributeState("default", label:'${currentValue}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
 			}
             
 			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -150,11 +176,12 @@ def setStatus(data){
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.State != null){
-    	if(jsonObj.State.rValue == "전원 OFF" || jsonObj.State.rValue == "0"){
+    	if(jsonObj.State.value == "0"){
         	sendEvent(name:"switch", value: "off")
         }else{
         	sendEvent(name:"switch", value: "on")
         }
+        sendEvent(name:"curState", value: STATE_VALUE[jsonObj.State.value as int]["str"][language])
     }
     
     if(jsonObj.APCourse != null){
@@ -167,26 +194,11 @@ def setStatus(data){
     if(jsonObj.Remain_Time_M != null){
     	state.remainTimeM = changeTime(jsonObj.Remain_Time_M.rValue)
 	}
-    /*
-    if(jsonObj.TCLCount != null){
-    	sendEvent(name:"tlcCount", value: jsonObj.TCLCount)
-	}
-    if(jsonObj.DryLevel != null){
-    	sendEvent(name:"dryLevel", value: jsonObj.DryLevel)
-	}
-    
-    if(jsonObj.WaterTemp != null){
-    	sendEvent(name:"waterTemp", value: jsonObj.WaterTemp)
-	}
-    if(jsonObj.SpinSpeed != null){
-    	sendEvent(name:"spinSpeed", value: jsonObj.SpinSpeed)
-	}
-    if(jsonObj.SoilLevel != null){
-    	sendEvent(name:"soilLevel", value: jsonObj.SoilLevel)
-	}
-    */
+   
     sendEvent(name:"leftTime", value: state.remainTimeH + ":" + state.remainTimeM + ":00")
-    sendEvent(name:"leftMinute", value: jsonObj.Remain_Time_H.rValue * 60 + jsonObj.Remain_Time_M.rValue)
+    if(jsonObj.Remain_Time_H != null){
+    	sendEvent(name:"leftMinute", value: jsonObj.Remain_Time_H.value * 60 + jsonObj.Remain_Time_M.value)
+    }
 
     updateLastTime();
 }
