@@ -200,6 +200,8 @@ def addDevice(){
         	dth = "LG Refrigerator"
         }else if(type == "ac"){
         	dth = "LG Air Conditioner"
+        }else if(type == "dryer"){
+        	dth = "LG Dryer"
         }
         
         def name = dth;
