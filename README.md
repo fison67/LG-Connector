@@ -63,6 +63,10 @@ Added support devices.
 <br/><br/>
 
 ## DTH Example
+![ac](./imgs/lg-ac.png)
+![washer](./imgs/lg-washer.png)
+![tv](./imgs/lg-tv.png)
+![refrigerator](./imgs/lg-refrigerator.png)
 <br/><br/>
 
 ## Supported Devices
