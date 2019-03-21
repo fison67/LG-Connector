@@ -37,6 +37,14 @@ AIR_CLEAN_VALUE = [
 ]
 
 @Field
+OPERATION_VALUE = [
+	0: [val: "@AC_MAIN_OPERATION_OFF_W", str: "OFF"],
+    1: [val: "@AC_MAIN_OPERATION_RIGHT_ON_W", str: "RIGHT ON"],
+    256: [val: "@AC_MAIN_OPERATION_LEFT_ON_W", str: "LEFT ON"],
+    257: [val: "@AC_MAIN_OPERATION_ALL_ON_W", str: "ALL ON"]
+]
+
+@Field
 OP_MODE_VALUE = [
 	0:[val: "@AC_MAIN_OPERATION_MODE_COOL_W", str: ["EN":"COOL", "KR":"냉방"] ],
     1:[val: "@AC_MAIN_OPERATION_MODE_DRY_W", str: ["EN":"DRY", "KR":"제습"] ],
@@ -159,10 +167,11 @@ WIND_VALUE = [
 ]
 
 metadata {
-	definition (name: "LG Air Conditioner", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "generic-contact") {
+	definition (name: "LG Air Conditioner", namespace: "fison67", author: "fison67") {
         capability "Switch"
         capability "Switch Level"
-		capability "Thermostat"
+        capability "Temperature Measurement"
+        capability "Relative Humidity Measurement"
         capability "Air Conditioner Mode"
         capability "Dust Sensor"
         capability "Refresh"
@@ -199,6 +208,9 @@ metadata {
     
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
+        
+        input name: "powerOnValue", title:"Power On Value" , type: "number", required: false, defaultValue: 257
+        input name: "powerOffValue", title:"Power Off Value" , type: "number", required: false, defaultValue: 0
         
         input name: "wind1", title:"Wind#1 Type" , type: "number", required: false, defaultValue: 2056
         input name: "wind2", title:"Wind#2 Type" , type: "number", required: false, defaultValue: 1286
@@ -334,6 +346,9 @@ def setStatus(data){
     if(jsonObj.TempCfg){
     	sendEvent(name: "level", value: jsonObj.TempCfg.value)
     }
+    if(jsonObj.SensorHumidity){
+    	sendEvent(name:"humidity", value: jsonObj.SensorHumidity.value as int)
+    }
     if(jsonObj.OpMode){
     	sendEvent(name: "mode", value: OP_MODE_VALUE[jsonObj.OpMode.value as int]["str"][language])
     	sendEvent(name: "airConditionerMode", value: OP_MODE_VALUE[jsonObj.OpMode.value as int]["str"]["EN"])
@@ -387,14 +402,12 @@ def wind6(){
     wind(wind6)
 }
 
-
-
 def on(){
-	makeCommand("SetOperation", "257")
+	makeCommand("SetOperation", powerOnValue.toString() == null ? "257" : powerOnValue.toString())
 }
 
 def off(){
-	makeCommand("SetOperation", "0")
+	makeCommand("SetOperation", powerOffValue.toString() == null ? "0" : powerOffValue.toString())
 }
 
 def airCleanOn(){
@@ -440,7 +453,6 @@ def aromaMode(){
 def evergySavingMode(){
 	makeCommand("SetOpMode", '{"OpMode":"8"}')
 }
-
 
 def control(cmd, value){
 	makeCommand(cmd, value)
