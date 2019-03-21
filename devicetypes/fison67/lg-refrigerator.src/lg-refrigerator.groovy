@@ -1,5 +1,5 @@
 /**
- *  LG Refrigerator(v.0.0.2)
+ *  LG Refrigerator(v.0.0.3)
  *
  * MIT License
  *
@@ -35,12 +35,16 @@ metadata {
         capability "Contact Sensor"
         capability "Switch Level"
         capability "Temperature Measurement"
-        capability "Configuration"
-        capability "Lock"
         capability "Refresh"
         
-        
         command "setStatus"
+        command "setLevel2"
+        command "setSmartSaving", ["number"]
+        command "setIcePlusToggle"
+        command "setIcePlusOn"
+        command "setIcePlusOff"
+        
+        attribute "icePlus", "string"
         
 	}
 
@@ -53,7 +57,7 @@ metadata {
 
 	tiles(scale: 2) {
 		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
+        multiAttributeTile(name:"contact", type: "generic", width: 6, height: 2){
             tileAttribute ("device.contact", key: "PRIMARY_CONTROL") {
                	attributeState "open", label:'${name}', icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-refrigerator.png?raw=true", backgroundColor:"#e86d13"
             	attributeState "closed", label:'${name}', icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-refrigerator.png?raw=true", backgroundColor:"#00a0dc"
@@ -65,16 +69,17 @@ metadata {
 		}
         
         valueTile("temp1_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Temperature#1'
+            state "default", label:'Temp'
         }
         controlTile("temperatureControl", "device.level", "slider", range:"(0..6)", height: 1, width: 1) {
             state "level", action:"setLevel"
         }
         valueTile("temp2_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Temperature#2'
+            state "default", label:'Freezer Temp'
         }
-        valueTile("temp2", "device.temperature2", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'${currentValue}'
+        
+        controlTile("temperature2Control", "device.level2", "slider", range:"(16..24)", height: 1, width: 1) {
+            state "level", action:"setLevel2"
         }
         
         valueTile("airFresh_label", "", decoration: "flat", width: 3, height: 1) {
@@ -82,6 +87,13 @@ metadata {
         }
         valueTile("airFresh", "device.airFresh", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
+        }
+        
+        valueTile("icePlus_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'IcePlus'
+        }
+        valueTile("icePlus", "device.icePlus", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}', action: "setIcePlusToggle"
         }
         
         valueTile("smartSavingMode_label", "", decoration: "flat", width: 3, height: 1) {
@@ -129,7 +141,7 @@ def setData(dataList){
 }
 
 def setStatus(data){
-	log.debug "Update >> ${data.key} >> ${data.data}"
+	log.debug "${data.data}"
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.DoorOpenState){
@@ -145,15 +157,19 @@ def setStatus(data){
 	}
     if(jsonObj.TempFreezer){
     	sendEvent(name:"temperature2", value: jsonObj.TempFreezer.rValue as int)
+    	sendEvent(name:"level2", value: -(jsonObj.TempFreezer.rValue as int))
     }
     if(jsonObj.FreshAirFilter){
-    	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter.rValue)
+    	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter.sValue)
     }
     if(jsonObj.SmartSavingModeStatus){
-    	sendEvent(name:"smartSavingMode", value: jsonObj.SmartSavingModeStatus.rValue)
+    	sendEvent(name:"smartSavingMode", value: jsonObj.SmartSavingModeStatus.rValue.toLowerCase())
     }
     if(jsonObj.LockingStatus){
     	sendEvent(name:"lock", value: jsonObj.LockingStatus.rValue == "UNLOCK" ? "unlocked" : "locked")
+    }
+    if(jsonObj.IcePlus){
+    	sendEvent(name:"icePlus", value: jsonObj.IcePlus.value == 2 ? "on" : "off")
     }
     
     updateLastTime();
@@ -165,37 +181,55 @@ def updateLastTime(){
 }
 
 def setLevel(level){
-    sendEvent(name:"level", value: level)
+    makeCommand("setTemp", level)
 }
 
-def on(){
-//	makeCommand("power", "on")
+def setLevel2(level){
+    makeCommand("setFreezerTemp", -(level))
 }
 
-def off(){
-//	makeCommand("power", "off")
+def setSmartSavingOn(value){
+    makeCommand("setActiveSaving", value)
 }
 
-def makeCommand(type, value){
+def setIcePlusToggle(){
+    def status = device.currentValue("icePlus")
+    if(status == "on"){
+    	setIcePlusOff()
+    }else{
+    	setIcePlusOn()
+    }
+}
+
+def setIcePlusOn(){
+    makeCommand("setIcePlus", "on")
+}
+
+def setIcePlusOff(){
+    makeCommand("setIcePlus", "off")
+}
+
+def makeCommand(command, value){
     def body = [
         "id": state.id,
-        "cmd": type,
-        "data": value
+        "command": command,
+        "value": value
     ]
-    def options = makeCommand(body)
+    def options = _makeCommand(body)
     sendCommand(options, null)
 }
 
-def makeCommand(body){
+def _makeCommand(body){
 	def options = [
      	"method": "POST",
-        "path": "/smartthinq/control",
+        "path": "/devices/control2",
         "headers": [
         	"HOST": state.app_url,
             "Content-Type": "application/json"
         ],
         "body":body
     ]
+    log.debug options
     return options
 }
 
