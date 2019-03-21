@@ -55,9 +55,11 @@ Added support devices.
 <br/><br/>
 
 ## Management Web Desktop Version
+![web-dashboard-pc](./imgs/lg-connector-desktop-dashboard.png)
 <br/><br/>
 
 ## Management Web Mobile Version
+![web-dashboard-mobile](./imgs/lg-connector-mobile-dashboard.png)
 <br/><br/>
 
 ## DTH Example
