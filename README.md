@@ -124,3 +124,18 @@ sudo mkdir /docker/lg-connector
 docker pull fison67/lg-connector:0.0.2
 docker run -d --restart=always -v /docker/lg-connector:/config --name=lg-connector --net=host fison67/lg-connector:0.0.2
 ```
+
+
+## LG Connector configuration
+
+```
+1. Open LG Connector web settings page (http://X.X.X.X:30020/settings)
+2. Default Login ID & Password is [ admin / 12345 ]
+3. Select a System IP Address. & Press a Save button.
+4. Open a LG Connector of Smartapp. Fill in the blanks. Press Save button.
+5. Go to the Smartthinq tab of web setting page & Press a Get Token button. 
+   You can see a new window.
+   Login by your lg account. When you success a login, Copy an url of brower and paste it to box of Refresh Token.
+5. Restart LG Connector Docker container
+```
+
