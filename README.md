@@ -70,6 +70,10 @@ Added support devices.
 <br/><br/>
 
 ## Supported Devices
+LG TV<br/>
+LG Air Conditioner<br/>
+LG Washer<br/>
+LG Refrigerator<br/>
 <br/><br/>
 
 
@@ -88,6 +92,7 @@ Added support devices.
 | ------------- |
 |fison67/lg-connector:0.0.2|
 |fison67/lg-connector-rasp:0.0.2|
+<br/><br/>
 
 
 ## Install LG Connector API Server
@@ -131,6 +136,7 @@ sudo mkdir /docker/lg-connector
 docker pull fison67/lg-connector:0.0.2
 docker run -d --restart=always -v /docker/lg-connector:/config --name=lg-connector --net=host fison67/lg-connector:0.0.2
 ```
+<br/><br/>
 
 
 ## LG Connector configuration
@@ -211,6 +217,7 @@ Update Click
 12. Click on the "Update" button
 ```
 Step 3 and 4 are only needed if the repo has not been added earlier (e.g. in the DTH installation).
+<br/><br/>
 
 
 
