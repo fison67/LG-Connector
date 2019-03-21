@@ -1,5 +1,5 @@
 /**
- *  LG TV (v.0.0.1)
+ *  LG TV (v.0.0.2)
  *
  * MIT License
  *
@@ -267,26 +267,28 @@ def setData(dataList){
 }
 
 def setStatus(data){
-	log.debug "Update >> ${data.key} >> ${data.data}"
-	if(data.cmd == "notify"){
-        switch(data.key){
+	log.debug "${data}"
+    def jsonObj = data
+    
+	if(jsonObj.cmd == "notify"){
+        switch(jsonObj.key){
         case "power":
-			sendEvent(name:"switch", value: data.data )
+			sendEvent(name:"switch", value: jsonObj.data )
             break; 
         case "volume":
-			sendEvent(name:"level", value: data.data as int )
+			sendEvent(name:"level", value: jsonObj.data as int )
             break;
         case "mute":
-			sendEvent(name:"mute", value: data.data == "true" ? "mute" : "unmuted" )
+			sendEvent(name:"mute", value: jsonObj.data == "true" ? "mute" : "unmuted" )
             break;
         case "input":
-        	updateInput(data.data)
+        	updateInput(jsonObj.data)
             break;
         case "channelNumber":
-			sendEvent(name:"channelNumber", value: data.data )
+			sendEvent(name:"channelNumber", value: jsonObj.data )
             break;
         case "channelName":
-			sendEvent(name:"channelName", value: data.data )
+			sendEvent(name:"channelName", value: jsonObj.data )
             break;
         }
         updateLastTime();
@@ -475,3 +477,4 @@ def sendCommand(options, _callback){
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
+
