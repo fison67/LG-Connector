@@ -33,7 +33,7 @@ If this project helps you, you can give me a cup of coffee<br/>
 	- [LG Connector configuration](#lg-connector-configuration)
 	- [Install Device Type Handler (DTH)](#install-device-type-handler-dth)
 		- [Manual install](#manual-install)
-		- [Install DTH with GitHub Repo integration](#install-dth-with-github-repo-integration)
+		- [Install DTH using the GitHub Repo integration](#install-dth-using-the-github-repo-integration)
 	- [Install SmartApp](#install-smartapp)
 		- [Install SmartApp using the GitHub Repo integration](#install-smartapp--using-the-github-repo-integration)
 - [Library](#library)
