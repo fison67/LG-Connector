@@ -179,7 +179,7 @@ def setStatus(data){
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.State != null){
-    	if(jsonObj.State.value == "0"){
+    	if(jsonObj.State.value as int == 0){
         	sendEvent(name:"switch", value: "off")
         }else{
         	sendEvent(name:"switch", value: "on")
@@ -188,7 +188,11 @@ def setStatus(data){
     }
     
     if(jsonObj.ProcessState != null){
-    	sendEvent(name:"processState", value: PROCESS_STATE_VALUE[jsonObj.ProcessState.value as int]["str"][language])
+    	def value = PROCESS_STATE_VALUE[jsonObj.ProcessState.value as int]["str"][language]
+        if(jsonObj.State.value as int == 0){
+        	value = "OFF"
+        }
+    	sendEvent(name:"processState", value: value)
     }
     
     if(jsonObj.Course != null){
