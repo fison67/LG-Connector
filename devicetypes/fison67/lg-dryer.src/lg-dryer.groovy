@@ -58,6 +58,7 @@ PROCESS_STATE_VALUE = [
 
 @Field
 COURSE_VALUE = [
+	0: [val: "@OFF", str: ["EN":"OFF", "KR":"OFF"] ],
 	1: [val: "@REFRESH", str: ["EN":"REFRESH", "KR":"REFRESH"] ],
 	2: [val: "@WM_DRY24_COURSE_COTTON_SOFT_W", str: ["EN":"COTTON SOFT", "KR":"타월"] ],
 	4: [val: "@WM_DRY24_COURSE_BULKY_ITEM_W", str: ["EN":"BULKY", "KR":"이불"] ],
