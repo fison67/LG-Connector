@@ -34,7 +34,7 @@ import groovy.transform.Field
 STATE_VALUE = [
     0: [val: "@WM_STATE_POWER_OFF_W", str: ["EN":"OFF", "KR":"OFF"] ],
     1: [val: "@WM_STATE_INITIAL_W", str: ["EN":"INITIAL", "KR":"대기 중"] ],
-    2: [val: "@WM_STATE_RUNNING_W", str: ["EN":"RUNNING", "KR":"세탁 중"] ],
+    2: [val: "@WM_STATE_RUNNING_W", str: ["EN":"RUNNING", "KR":"건조 중"] ],
     3: [val: "@WM_STATE_PAUSE_W", str: ["EN":"PAUSE", "KR":"일시정지 중"] ],
     4: [val: "@WM_STATE_END_W", str: ["EN":"END", "KR":"종료 상태"] ],
     5: [val: "@WM_STATE_ERROR_W", str: ["EN":"ERROR", "KR":"에러 발생"] ],
