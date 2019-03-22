@@ -74,6 +74,7 @@ LG TV<br/>
 LG Air Conditioner<br/>
 LG Washer<br/>
 LG Refrigerator<br/>
+LG Dryer<br/>
 <br/><br/>
 
 
