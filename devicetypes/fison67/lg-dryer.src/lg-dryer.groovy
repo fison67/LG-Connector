@@ -32,7 +32,29 @@ import groovy.transform.Field
 
 @Field
 STATE_VALUE = [
-    
+    0: [val: "@WM_STATE_POWER_OFF_W", str: ["EN":"OFF", "KR":"OFF"] ],
+    1: [val: "@WM_STATE_INITIAL_W", str: ["EN":"INITIAL", "KR":"대기 중"] ],
+    2: [val: "@WM_STATE_RUNNING_W", str: ["EN":"RUNNING", "KR":"세탁 중"] ],
+    3: [val: "@WM_STATE_PAUSE_W", str: ["EN":"PAUSE", "KR":"일시정지 중"] ],
+    4: [val: "@WM_STATE_END_W", str: ["EN":"END", "KR":"종료 상태"] ],
+    5: [val: "@WM_STATE_ERROR_W", str: ["EN":"ERROR", "KR":"에러 발생"] ],
+    6: [val: "@WM_STATE_TEST1_W", str: ["EN":"?", "KR":"?"] ],
+    7: [val: "@WM_STATE_TEST2_W", str: ["EN":"?", "KR":"?"] ],
+    8: [val: "@WM_STATE_SMART_DIAGNOSIS_W", str: ["EN":"SMART DIAGNOSIS", "KR":"스마트 진단 중"] ],
+    100: [val: "@WM_STATE_RESERVE_W", str: ["EN":"RESERV", "KR":"예약 중"] ]
+]
+
+@Field
+PROCESS_STATE_VALUE = [
+    0: [val: "@WM_STATE_DETECTING_W", str: ["EN":"DETECTING", "KR":"옷감량 확인 중"] ],
+    1: [val: "@WM_STATE_STEAM_W", str: ["EN":"STEAM", "KR":"스팀 중"] ],
+    2: [val: "@WM_STATE_DRY_W", str: ["EN":"DRY", "KR":"건조 중"] ],
+    3: [val: "@WM_STATE_DRY_W", str: ["EN":"DRY", "KR":"건조 중"] ],
+    4: [val: "@WM_STATE_DRY_W", str: ["EN":"DRY", "KR":"건조 중"] ],
+    5: [val: "@WM_STATE_COOLING_W", str: ["EN":"COOLING", "KR":"쿨링"] ],
+    6: [val: "@WM_STATE_ANTI_CREASE_W", str: ["EN":"ANTI CREASE", "KR":"구김방지 중"] ],
+    7: [val: "@WM_STATE_END_W", str: ["EN":"END", "KR":"종료 상태"] ]
+
 ]
 
 metadata {
@@ -43,8 +65,8 @@ metadata {
         command "setStatus"
         
         attribute "leftMinute", "number"
-        attribute "prvState", "string"
         attribute "curState", "string"
+        attribute "processState", "string"
 	}
 
 	simulator {
@@ -56,9 +78,10 @@ metadata {
 
 	tiles(scale: 2) {
 		
-        multiAttributeTile(name:"curState", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.curState", key: "PRIMARY_CONTROL") {
-             	attributeState("default", label:'${currentValue}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
+        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
+			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
+                attributeState("on", label:'${name}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
+                attributeState("off", label:'${name}', backgroundColor:"#ffffff",  icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
 			}
             
 			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
@@ -66,6 +89,18 @@ metadata {
             }
 		}
         
+        valueTile("curState_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'State'
+        }
+        valueTile("curState", "device.curState", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        valueTile("processState_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Process State'
+        }
+        valueTile("processState", "device.processState", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
         valueTile("leftTime_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Left Time'
         }
@@ -108,7 +143,11 @@ def setStatus(data){
         }else{
         	sendEvent(name:"switch", value: "on")
         }
-    //    sendEvent(name:"curState", value: STATE_VALUE[jsonObj.State.value as int]["str"][language])
+        sendEvent(name:"curState", value: STATE_VALUE[jsonObj.State.value as int]["str"][language])
+    }
+    
+    if(jsonObj.ProcessState != null){
+    	sendEvent(name:"processState", value: PROCESS_STATE_VALUE[jsonObj.ProcessState.value as int]["str"][language])
     }
     
     if(jsonObj.Remain_Time_H != null){
