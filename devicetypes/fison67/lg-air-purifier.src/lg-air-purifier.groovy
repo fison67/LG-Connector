@@ -178,7 +178,7 @@ metadata {
 			state "default", label: "AirPolution"
 		}
         valueTile("totalAirPolution", "device.totalAirPolution", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}°'
+            state "default", label:'${currentValue}'
         }
         standardTile("tempLabel", "device.tempLabel", decoration: "flat", height: 1, width: 2) {
 			state "default", label: "Temperature"
