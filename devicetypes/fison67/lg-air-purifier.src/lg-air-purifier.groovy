@@ -32,10 +32,10 @@ import groovy.transform.Field
 
 @Field
 OPERATION_VALUE = [
-    14: [val: "@AP_MAIN_MID_OPMODE_CIRCULATOR_CLEAN_W", str: ["EN": "Clean Booster", "KR": "클린부스터"]],
-    15: [val: "@AP_MAIN_MID_OPMODE_BABY_CARE_W", str: ["EN": "Baby Care", "KR": "싱글청정"]],
-    16: [val: "@AP_MAIN_MID_OPMODE_DUAL_CLEAN_W", str: ["EN": "Dual Clean", "KR": "듀얼청정"]],
-    17: [val: "@AP_MAIN_MID_OPMODE_AUTO_W", str: ["EN": "Auto", "KR": "오토모드"]]
+    13: [val: "@AP_MAIN_MID_OPMODE_CIRCULATOR_CLEAN_W", str: ["EN": "Clean Booster", "KR": "클린부스터"]],
+    14: [val: "@AP_MAIN_MID_OPMODE_BABY_CARE_W", str: ["EN": "Baby Care", "KR": "싱글청정"]],
+    15: [val: "@AP_MAIN_MID_OPMODE_DUAL_CLEAN_W", str: ["EN": "Dual Clean", "KR": "듀얼청정"]],
+    16: [val: "@AP_MAIN_MID_OPMODE_AUTO_W", str: ["EN": "Auto", "KR": "오토모드"]]
 ]
 
 @Field 
@@ -106,10 +106,10 @@ metadata {
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
         
-        input name: "mode1", title:"Mode#1 Type" , type: "number", required: false, defaultValue: 14
-        input name: "mode2", title:"Mode#2 Type" , type: "number", required: false, defaultValue: 15
-        input name: "mode3", title:"Mode#3 Type" , type: "number", required: false, defaultValue: 16
-        input name: "mode4", title:"Mode#4 Type" , type: "number", required: false, defaultValue: 17
+        input name: "mode1", title:"Mode#1 Type" , type: "number", required: false, defaultValue: 13
+        input name: "mode2", title:"Mode#2 Type" , type: "number", required: false, defaultValue: 14
+        input name: "mode3", title:"Mode#3 Type" , type: "number", required: false, defaultValue: 15
+        input name: "mode4", title:"Mode#4 Type" , type: "number", required: false, defaultValue: 16
         
         input name: "wind1", title:"Wind#1 Type" , type: "number", required: false, defaultValue: 3
         input name: "wind2", title:"Wind#2 Type" , type: "number", required: false, defaultValue: 5
