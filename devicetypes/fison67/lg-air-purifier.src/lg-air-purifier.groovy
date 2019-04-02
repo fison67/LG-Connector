@@ -446,7 +446,15 @@ def airRemovalOn(){
 }
 
 def airRemovalOff(){
-	makeCommand("SetAirRemoval", '{"AirRemoval":"1"}')
+	makeCommand("SetAirRemoval", '{"AirRemoval":"0"}')
+}
+
+def circulatorDirectionOn(){
+	makeCommand("SetCirculateDir", '{"CirculateDir":"1"}')
+}
+
+def circulatorDirectionOff(){
+	makeCommand("SetCirculateDir", '{"CirculateDir":"0"}')
 }
 
 def control(cmd, value){
