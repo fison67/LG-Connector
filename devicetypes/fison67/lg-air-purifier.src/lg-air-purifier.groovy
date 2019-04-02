@@ -40,20 +40,34 @@ OPERATION_VALUE = [
 
 @Field 
 CIRCULATOR_VALUE = [
-    3: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_LOW_W", str: ["EN": "Low", "KR": "약"]],
-    5: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_MID_W", str: ["EN": "Mid", "KR": "중"]],
-    7: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_HIGH_W", str: ["EN": "High", "KR": "강"]],
-    8: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_POWER_W", str: ["EN": "Power", "KR": "터보"]],
-    9: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_AUTO_W", str: ["EN": "Auto", "KR": "오토"]]
+    0: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_LOWST_LOW_W", str: ["EN": "Lowst Low", "KR": "약약약"]],
+    1: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_LOWST_W", str: ["EN": "Lowst", "KR": "약약"]],
+    2: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_LOW_W", str: ["EN": "Low", "KR": "약"]],
+    3: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_LOW_MID_W", str: ["EN": "Low Mid", "KR": "약중"]],
+    4: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_MID_W", str: ["EN": "Mid", "KR": "중"]],
+    5: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_MID_HIGH_W", str: ["EN": "Mid High", "KR": "중상"]],
+    6: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_HIGH_W", str: ["EN": "High", "KR": "상"]],
+    7: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_POWER_W", str: ["EN": "Power", "KR": "파워"]],
+    8: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_AUTO_W", str: ["EN": "Auto", "KR": "오토"]],
+    9: [val:"@AP_MAIN_MID_CIRCULATORSTRENGTH_LINK_W", str: ["EN": "Link", "KR": "Link"]]
 ]
 
 @Field 
 WIND_VALUE = [
-    3: [val:"@AP_MAIN_MID_WINDSTRENGTH_LOW_W", str: ["EN": "Low", "KR": "약"]],
-    5: [val:"@AP_MAIN_MID_WINDSTRENGTH_MID_W", str: ["EN": "Mid", "KR": "중"]],
-    7: [val:"@AP_MAIN_MID_WINDSTRENGTH_HIGH_W", str: ["EN": "High", "KR": "강"]],
-    8: [val:"@AP_MAIN_MID_WINDSTRENGTH_POWER_W", str: ["EN": "Power", "KR": "터보"]],
-    9: [val:"@AP_MAIN_MID_WINDSTRENGTH_AUTO_W", str: ["EN": "Auto", "KR": "오토"]]
+    0: [val:"@AP_MAIN_MID_WINDSTRENGTH_LOWST_LOW_W", str: ["EN": "Lowst Low", "KR": "약약약"]],
+    1: [val:"@AP_MAIN_MID_WINDSTRENGTH_LOWST_W", str: ["EN": "Lowst", "KR": "약약"]],
+    2: [val:"@AP_MAIN_MID_WINDSTRENGTH_LOW_W", str: ["EN": "Low", "KR": "약"]],
+    3: [val:"@AP_MAIN_MID_WINDSTRENGTH_LOW_MID_W", str: ["EN": "Low Mid", "KR": "약중"]],
+    4: [val:"@AP_MAIN_MID_WINDSTRENGTH_MID_W", str: ["EN": "Mid", "KR": "중"]],
+    5: [val:"@AP_MAIN_MID_WINDSTRENGTH_MID_HIGH_W", str: ["EN": "Mid High", "KR": "중상"]],
+    6: [val:"@AP_MAIN_MID_WINDSTRENGTH_HIGH_W", str: ["EN": "High", "KR": "상"]],
+    7: [val:"@AP_MAIN_MID_WINDSTRENGTH_POWER_W", str: ["EN": "Power", "KR": "파워"]],
+    8: [val:"@AP_MAIN_MID_WINDSTRENGTH_AUTO_W", str: ["EN": "Auto", "KR": "오토"]],
+    9: [val:"@AP_MAIN_MID_WINDSTRENGTH_LONGPOWWER_W", str: ["EN": "Long POwer", "KR": "중파워"]],
+    10: [val:"@AP_MAIN_MID_WINDSTRENGTH_SHOWER_W", str: ["EN": "Shower", "KR": "Shower"]],
+    11: [val:"@AP_MAIN_MID_WINDSTRENGTH_FOREST_W", str: ["EN": "Forest", "KR": "Forest"]],
+    12: [val:"@AP_MAIN_MID_WINDSTRENGTH_TURBO_W", str: ["EN": "Turbo", "KR": "터보"]],
+    13: [val:"@AP_MAIN_MID_WINDSTRENGTH_FASTWIND_W", str: ["EN": "Fast Wind", "KR": "Fast Wind"]]
 ]
 
 metadata {
@@ -276,7 +290,6 @@ def updated() {
 	sendEvent(name: "mode3", value: OPERATION_VALUE[mode3]["str"][language])
 	sendEvent(name: "mode4", value: OPERATION_VALUE[mode4]["str"][language])
     
-    log.debug WIND_VALUE[wind1]["str"][language]
 	sendEvent(name: "wind1", value: WIND_VALUE[wind1]["str"][language])
 	sendEvent(name: "wind2", value: WIND_VALUE[wind2]["str"][language])
 	sendEvent(name: "wind3", value: WIND_VALUE[wind3]["str"][language])
