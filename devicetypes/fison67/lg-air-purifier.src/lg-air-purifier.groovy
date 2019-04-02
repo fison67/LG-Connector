@@ -365,11 +365,11 @@ def setLevel(level){
 }
 
 def on(){
-	makeCommand("SetOperation", "Start")
+	makeCommand("SetOperationStart", "Start")
 }
 
 def off(){
-	makeCommand("SetOperation", "Stop")
+	makeCommand("SetOperationStop", "Stop")
 }
 
 def setCir(val){
