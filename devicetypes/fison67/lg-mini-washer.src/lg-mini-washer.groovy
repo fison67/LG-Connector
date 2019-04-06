@@ -56,8 +56,12 @@ metadata {
         command "setStatus"
         
         attribute "leftMinute", "number"
+        attribute "rinseCount", "number"
         attribute "prvState", "string"
         attribute "curState", "string"
+        attribute "waterTemp", "string"
+        attribute "spinSpeed", "string"
+        
 	}
 
 	simulator {
@@ -81,6 +85,26 @@ metadata {
                 attributeState "level", action:"setLevel"
             }     
 		}
+        
+        valueTile("temp_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Water Temp'
+        }
+        valueTile("waterTemp", "device.waterTemp", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        valueTile("spinSpeed_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Spin Speed'
+        }
+        valueTile("spinSpeed", "device.spinSpeed", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        valueTile("rinseCount_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Rinse Count'
+        }
+        valueTile("rinseCount", "device.rinseCount", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        
         
         valueTile("leftTime_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Left Time'
@@ -131,7 +155,18 @@ def setStatus(data){
     if(jsonObj.Remain_Time_M != null){
     	state.remainTimeM = changeTime(jsonObj.Remain_Time_M.rValue)
 	}
-   
+    
+    if(jsonObj.RinseCount != null){
+    	sendEvent(name:"rinseCount", value: jsonObj.RinseCount.value)
+	}
+    if(jsonObj.WTemp != null){
+    	sendEvent(name:"waterTemp", value: jsonObj.WTemp.sValue)
+	}
+    if(jsonObj.SpinSpeed != null){
+    	sendEvent(name:"spinSpeed", value: jsonObj.SpinSpeed.rValue)
+	}
+    
+    
     sendEvent(name:"leftTime", value: state.remainTimeH + ":" + state.remainTimeM + ":00")
     if(jsonObj.Remain_Time_H != null){
     	sendEvent(name:"leftMinute", value: jsonObj.Remain_Time_H.value * 60 + jsonObj.Remain_Time_M.value)
