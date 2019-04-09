@@ -141,8 +141,10 @@ def setStatus(data){
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.State != null){
-    	if(jsonObj.State.value == "0"){
+    	if(jsonObj.State.value as int == 0){
         	sendEvent(name:"switch", value: "off")
+            sendEvent(name:"leftMinute", value: 0)
+    		sendEvent(name:"leftTime", value: "00:00:00")
         }else{
         	sendEvent(name:"switch", value: "on")
         }
