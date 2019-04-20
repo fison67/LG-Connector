@@ -33,10 +33,7 @@ metadata {
 	definition (name: "LG TV", namespace: "fison67", author: "fison67") {
         capability "Switch"
         capability "Switch Level"
-        capability "Tv Channel"
-        capability "Audio Mute"
         capability "Audio Volume"
-        capability "Media Input Source"
         capability "Speech Synthesis"
         
         command "playText", ["string"]
@@ -45,8 +42,8 @@ metadata {
         command "stop"
         
         command "setStatus"
-    //    command "mute"
-    //    command "unmute"
+        command "mute"
+        command "unmute"
         command "goTV"
         command "goNetflix"
         command "goHdmi1"
@@ -72,111 +69,6 @@ metadata {
         input name: "webURL", title:"Type a web url" , type: "string", required: false, defaultValue: "https://www.naver.com", description:"URL"
 	}
 
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-             	attributeState "on", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lgtv-on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "off", label:'${name}', action:"switch.on", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lgtv-off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lgtv-on.png?raw=true", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.ofn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lgtv-off.png?raw=true", backgroundColor:"#ffffff", nextState:"turningOn"
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            tileAttribute ("device.volume", key: "SLIDER_CONTROL") {
-                attributeState "volume", action:"setVolume"
-            }     
-		}
-        
-        standardTile("mute", "device.mute") {
-			state "unmuted", label:'${name}', action: "mute", nextState:"mute", icon: "st.custom.sonos.unmuted", backgroundColor:"#ffffff"
-			state "mute", label:'${name}', action: "unmute", nextState:"unmuted", icon: "st.custom.sonos.muted", backgroundColor:"#f91818"
-		}
-        
-        valueTile("inputSource", "device.inputSource", decoration: "flat", width: 5, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        standardTile("inputHdmi1", "device.inputHdmi1") {
-			state "inputHdmi1", label:'HDMI#1', action: "goHdmi1", backgroundColor:"#ffffff"
-		}
-        standardTile("inputHdmi2", "device.inputHdmi2") {
-			state "inputHdmi2", label:'HDMI#2', action: "goHdmi2", backgroundColor:"#ffffff"
-		}
-        standardTile("inputHdmi3", "device.inputHdmi3") {
-			state "inputHdmi3", label:'HDMI#3', action: "goHdmi3", backgroundColor:"#ffffff"
-		}
-        standardTile("inputMusic", "device.inputMusic") {
-			state "inputMusic", label:'Music', action: "goMusic", backgroundColor:"#ffffff"
-		}
-        standardTile("inputYoutube", "device.inputYoutube") {
-			state "inputYoutube", label:'Youtube', action: "goYoutube", backgroundColor:"#ffffff"
-		}
-        standardTile("inputNetflix", "device.inputNetflix") {
-			state "inputNetflix", label:'Netflix', action: "goNetflix", backgroundColor:"#ffffff"
-		}
-        
-        
-        standardTile("inputTV", "device.inputTV") {
-			state "inputTV", label:'TV', action: "goTV", backgroundColor:"#ffffff"
-		}
-        valueTile("channelName", "device.channelName", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("channelNumber", "device.channelNumber", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("channelUp", "device.channelUp") {
-			state "channelUp", label:'CH UP', action: "channelUp", backgroundColor:"#ffffff"
-		}
-               
-        standardTile("channelDown", "device.channelDown") {
-			state "channelDown", label:'CH DN', action: "channelDown", backgroundColor:"#ffffff"
-		}
-        
-        
-        standardTile("inputPooq", "device.inputPooq") {
-			state "inputPooq", label:'pooq', action: "goPooq", backgroundColor:"#ffffff"
-		}
-        standardTile("inputTving", "device.inputTving") {
-			state "inputTving", label:'Tving', action: "goTving", backgroundColor:"#ffffff"
-		}
-        standardTile("inputWatcha", "device.inputWatcha") {
-			state "inputWatcha", label:'Watcha', action: "goWatcha", backgroundColor:"#ffffff"
-		}
-        
-        standardTile("inputPhoto", "device.inputPhoto") {
-			state "inputPhoto", label:'Photo', action: "goPhoto", backgroundColor:"#ffffff"
-		}
-        standardTile("inputWeb", "device.inputWeb") {
-			state "inputWeb", label:'Web', action: "goWeb", backgroundColor:"#ffffff"
-		}
-        
-        standardTile("play", "device.play") {
-			state "play", label:'Play', action: "mediaPlay", backgroundColor:"#ffffff"
-		}
-        standardTile("pause", "device.pause") {
-			state "pause", label:'Pause', action: "mediaPause", backgroundColor:"#ffffff"
-		}
-        standardTile("stop", "device.stop") {
-			state "stop", label:'Stop', action: "mediaStop", backgroundColor:"#ffffff"
-		}
-        
-        valueTile("timer_label", "device.leftTime", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Set Timer\n${currentValue}'
-        }
-        
-        controlTile("time", "device.timeRemaining", "slider", height: 1, width: 1, range:"(0..120)") {
-	    	state "time", action:"setTimeRemaining"
-		}
-        
-        standardTile("tiemr0", "device.timeRemaining") {
-			state "default", label: "OFF", action: "stop", icon:"st.Health & Wellness.health7", backgroundColor:"#c7bbc9"
-		}
-	}
 }
 
 def msToTime(duration) {
@@ -486,7 +378,7 @@ def makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
