@@ -76,7 +76,6 @@ metadata {
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
-        capability "Dust Sensor"
         capability "Refresh"
         
         attribute "pm1", "number"
@@ -86,6 +85,8 @@ metadata {
         attribute "airRemoval", "string"
         attribute "circulatorDirection", "string"
         attribute "totalAirPolution", "number"
+		attribute "fineDustLevel", "number" // PM 2.5  
+        attribute "dustLevel", "number" // PM 10
         
         command "airRemovalOff"
         command "airRemovalOn"
@@ -137,144 +138,6 @@ metadata {
         input name: "cir4", title:"Circulate#4 Type" , type: "number", required: false, defaultValue: 8
         input name: "cir5", title:"Circulate#5 Type" , type: "number", required: false, defaultValue: 9
         
-	}
-
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-            tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-              attributeState "on", label:'${name}', action:"switch.off",  backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-on.png?raw=true"
-                attributeState "off", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-off.png?raw=true"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-off.png?raw=true"
-                attributeState "turningOff", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-on.png?raw=true"
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-		}
-        controlTile("humidityControl", "device.level", "slider", range:"(0..100)", height: 1, width: 2) {
-            state "level", action:"setLevel"
-        }
-        valueTile("mode", "device.mode", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        standardTile("circulatorLabel", "device.circulatorLabel", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Circulator"
-		}
-        valueTile("circulator", "device.circulator", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("windLabel", "device.windLabel", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Wind"
-		}
-        valueTile("wind", "device.wind", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        standardTile("airPolutionLabel", "device.airPolutionLabel", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "AirPolution"
-		}
-        valueTile("totalAirPolution", "device.totalAirPolution", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("tempLabel", "device.tempLabel", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Temperature"
-		}
-        valueTile("temperature", "device.temperature", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}°'
-        }
-        standardTile("humidityLabel", "device.humidityLabel", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Humidity"
-		}
-        valueTile("humidity", "device.humidity", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}%'
-        }
-        standardTile("pm1Label", "device.pm1Label", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "PM1"
-		}
-        valueTile("pm1", "device.pm1", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("pm25Label", "device.pm25Label", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "PM2.5"
-		}
-        valueTile("fineDustLevel", "device.fineDustLevel", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("pm10Label", "device.pm10Label", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "PM10"
-		}
-        valueTile("dustLevel", "device.dustLevel", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("airRemoval", "device.airRemoval", inactiveLabel: false, width: 1, height: 1, canChangeIcon: true) {
-            state "on", label:'Air ${name}', action:"airRemovalOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'Air ${name}', action:"airRemovalOn", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"airRemovalOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"airRemovalOn", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        standardTile("circulatorDirection", "device.circulatorDirection", inactiveLabel: false, width: 1, height: 1, canChangeIcon: true) {
-            state "on", label:'Cir ${name}', action:"circulatorDirectionOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "off", label:'Cir ${name}', action:"circulatorDirectionOn", backgroundColor:"#ffffff", nextState:"turningOn"
-             
-        	state "turningOn", label:'....', action:"circulatorDirectionOff", backgroundColor:"#00a0dc", nextState:"turningOff"
-            state "turningOff", label:'....', action:"circulatorDirectionOn", backgroundColor:"#ffffff", nextState:"turningOn"
-        }
-        
-        valueTile("mode1", "device.mode1", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "mode1"
-		}
-        valueTile("mode2", "device.mode2", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "mode2"
-		}
-        valueTile("mode3", "device.mode3", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "mode3"
-		}
-        valueTile("mode4", "device.mode4", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "mode4"
-		}
-        
-        standardTile("windCLabel", "device.windCLabel", decoration: "flat", height: 1, width: 1) {
-			state "default", label: "Wind"
-		}
-        valueTile("wind1", "device.wind1", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "wind1"
-		}
-        valueTile("wind2", "device.wind2", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "wind2"
-		}
-        valueTile("wind3", "device.wind3", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "wind3"
-		}
-        valueTile("wind4", "device.wind4", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "wind4"
-		}
-        valueTile("wind5", "device.wind5", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "wind5"
-		}
-        
-        standardTile("cirLabel", "device.cirLabel", decoration: "flat", height: 1, width: 1) {
-			state "default", label: "Cir"
-		}
-        valueTile("cir1", "device.cir1", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "cir1"
-		}
-        valueTile("cir2", "device.cir2", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "cir2"
-		}
-        valueTile("cir3", "device.cir3", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "cir3"
-		}
-        valueTile("cir4", "device.cir4", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "cir4"
-		}
-        valueTile("cir5", "device.cir5", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "cir5"
-		}
 	}
 }
 
@@ -498,6 +361,6 @@ def _makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
