@@ -71,48 +71,6 @@ metadata {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
 	}
 
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"curState", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.curState", key: "PRIMARY_CONTROL") {
-             	attributeState("default", label:'${currentValue}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"setLevel"
-            }     
-		}
-        
-        valueTile("temp_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Water Temp'
-        }
-        valueTile("waterTemp", "device.waterTemp", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("spinSpeed_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Spin Speed'
-        }
-        valueTile("spinSpeed", "device.spinSpeed", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("rinseCount_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Rinse Count'
-        }
-        valueTile("rinseCount", "device.rinseCount", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        
-        valueTile("leftTime_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Left Time'
-        }
-        valueTile("leftTime", "device.leftTime", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-	}
 }
 
 // parse events into attributes
@@ -217,6 +175,6 @@ def makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
