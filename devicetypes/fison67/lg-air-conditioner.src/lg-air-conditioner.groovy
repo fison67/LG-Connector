@@ -172,8 +172,6 @@ metadata {
         capability "Switch Level"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
-        capability "Air Conditioner Mode"
-        capability "Dust Sensor"
         capability "Refresh"
         
         command "coolMode"
@@ -220,77 +218,6 @@ metadata {
         input name: "wind6", title:"Wind#6 Type" , type: "number", required: false, defaultValue: 65284
 	}
 
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-            tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-              attributeState "on", label:'${name}', action:"switch.off",  backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-on.png?raw=true"
-                attributeState "off", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-off.png?raw=true"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-off.png?raw=true"
-                attributeState "turningOff", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-on.png?raw=true"
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-		}
-        controlTile("temperatureControl", "device.level", "slider", range:"(18..30)", height: 2, width: 2) {
-            state "level", action:"setLevel"
-        }
-        valueTile("mode", "device.mode", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("wind", "device.wind", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("coolMode", "device.coolMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Cool", action: "coolMode"
-		}
-        standardTile("dryMode", "device.dryMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Dry", action: "dryMode"
-		}
-        standardTile("aiMode", "device.aiMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "AI", action: "aiMode"
-		}
-        standardTile("heatMode", "device.heatMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Heat", action: "heatMode"
-		}
-        standardTile("airCleanMode", "device.airCleanMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Air Clean", action: "airCleanMode"
-		}
-        standardTile("acoMode", "device.acoMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "ACO", action: "acoMode"
-		}
-        standardTile("aromaMode", "device.aromaMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Aroma", action: "aromaMode"
-		}
-        standardTile("evenrgySaveMode", "device.evenrgySaveMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Energy Save", action: "evenrgySaveMode"
-		}
-        
-        standardTile("empty", "", decoration: "flat", height: 1, width: 2) {
-			state "default", label: ""
-		}
-        valueTile("wind1", "device.wind1", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind1"
-		}
-        valueTile("wind2", "device.wind2", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind2"
-		}
-        valueTile("wind3", "device.wind1", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind3"
-		}
-        valueTile("wind4", "device.wind4", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind4"
-		}
-        valueTile("wind5", "device.wind5", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind5"
-		}
-        valueTile("wind6", "device.wind6", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind6"
-		}
-	}
 }
 
 // parse events into attributes
@@ -482,6 +409,6 @@ def _makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
