@@ -59,7 +59,7 @@ STATE_VALUE = [
 
 metadata {
 	definition (name: "LG Washer", namespace: "fison67", author: "fison67") {
-//        capability "Switch"
+        capability "Switch"
         capability "Sensor"
         capability "Switch Level"
         capability "Configuration"
