@@ -110,48 +110,6 @@ metadata {
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
 	}
-
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState("on", label:'${name}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
-                attributeState("off", label:'${name}', backgroundColor:"#ffffff",  icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-		}
-        /*
-        valueTile("curState_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'State'
-        }
-        valueTile("curState", "device.curState", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        */
-        valueTile("processState_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Process State'
-        }
-        valueTile("processState", "device.processState", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("course_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Course'
-        }
-        valueTile("course", "device.course", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("leftTime_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Left Time'
-        }
-        valueTile("leftTime", "device.leftTime", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        
-	}
 }
 
 // parse events into attributes
@@ -256,6 +214,6 @@ def makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
