@@ -59,6 +59,7 @@ STATE_VALUE = [
 
 metadata {
 	definition (name: "LG Washer", namespace: "fison67", author: "fison67") {
+//        capability "Switch"
         capability "Sensor"
         capability "Switch Level"
         capability "Configuration"
@@ -75,69 +76,6 @@ metadata {
     
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
-	}
-
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"curState", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.curState", key: "PRIMARY_CONTROL") {
-             	attributeState("default", label:'${currentValue}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"setLevel"
-            }     
-		}
-        
-        valueTile("apCourse_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'AP Course'
-        }
-        valueTile("apCourse", "device.apCourse", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("leftTime_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Left Time'
-        }
-        valueTile("leftTime", "device.leftTime", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        
-        valueTile("waterTemp_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Water Temp'
-        }
-        valueTile("waterTemp", "device.waterTemp", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("dryLevel_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Dry Level'
-        }
-        valueTile("dryLevel", "device.dryLevel", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'${currentValue}'
-        } 
-        valueTile("spinSpeed_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Spin Speed'
-        }
-        valueTile("spinSpeed", "device.spinSpeed", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("soilLevel_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Soil Level'
-        }
-        valueTile("soilLevel", "device.soilLevel", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        valueTile("tlcCount_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Tub Clean Count'
-        }
-        valueTile("tlcCount", "device.tlcCount", decoration: "flat", width: 1, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
 	}
 }
 
@@ -161,22 +99,13 @@ def setData(dataList){
     }
 }
 
-/**
-* {"Remain_Time_H":0,"Remain_Time_M":7,"Initial_Time_H":0,"Initial_Time_M":11,"APCourse":"스피드워시","Error":"No Error","SoilLevel":"선택 안함","WaterTemp":"선택 안함","DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"TCLCount":2,"LoadLevel":1}
-* {"State":"전원 OFF","PreState":"대기 중"}}
-* {"State":"대기 중","Remain_Time_H":0,"Remain_Time_M":0,"Initial_Time_H":0,"Initial_Time_M":0,"Error":"No Error","SoilLevel":"선택 안함","SpinSpeed":"선택 안함","WaterTemp":"선택 안함","RinseCount":"선택 안함","DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"PreState":"전원 OFF","TCLCount":2,"LoadLevel":0}
-* {"State":28,"Remain_Time_H":0,"Remain_Time_M":5,"Initial_Time_H":0,"Initial_Time_M":27,"APCourse":"스피드워시","Error":"No Error","SoilLevel":"선택 안함","SpinSpeed":3,"WaterTemp":"선택 안함","RinseCount":"선택 안함","DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"Option1":0,"Option2":4,"Option3":0,"PreState":1,"SmartCourse":33,"TCLCount":30,"OPCourse":0,"LoadLevel":2}
-* {"State":17,"Remain_Time_H":0,"Remain_Time_M":29,"Initial_Time_H":0,"Initial_Time_M":31,"APCourse":"스피드워시","Error":"No Error","SoilLevel":2,"SpinSpeed":3,"WaterTemp":3,"RinseCount":2,"DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"Option1":0,"Option2":4,"Option3":0,"PreState":14,"SmartCourse":33,"TCLCount":31,"OPCourse":0,"LoadLevel":3}
-* {"State":17,"Remain_Time_H":0,"Remain_Time_M":20,"Initial_Time_H":0,"Initial_Time_M":31,"APCourse":"스피드워시","Error":"No Error","SoilLevel":2,"SpinSpeed":3,"WaterTemp":3,"RinseCount":2,"DryLevel":"선택 안함","Reserve_Time_H":0,"Reserve_Time_M":0,"Option1":0,"Option2":4,"Option3":0,"PreState":14,"SmartCourse":33,"TCLCount":31,"OPCourse":0,"LoadLevel":3}
-
-*/
 def setStatus(data){
 	log.debug "Update >> ${data.key} >> ${data.data}"
     
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.State != null){
-    	if(jsonObj.State.value == "0"){
+    	if(jsonObj.State.value as int == 0){
         	sendEvent(name:"switch", value: "off")
         }else{
         	sendEvent(name:"switch", value: "on")
@@ -247,6 +176,6 @@ def makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
