@@ -55,69 +55,6 @@ metadata {
     
 	}
 
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"contact", type: "generic", width: 6, height: 2){
-            tileAttribute ("device.contact", key: "PRIMARY_CONTROL") {
-               	attributeState "open", label:'${name}', icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-refrigerator.png?raw=true", backgroundColor:"#e86d13"
-            	attributeState "closed", label:'${name}', icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-refrigerator.png?raw=true", backgroundColor:"#00a0dc"
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-		}
-        
-        valueTile("temp1_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Temp'
-        }
-        controlTile("temperatureControl", "device.level", "slider", range:"(0..6)", height: 1, width: 1) {
-            state "level", action:"setLevel"
-        }
-        valueTile("temp2_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Freezer Temp'
-        }
-        
-        controlTile("temperature2Control", "device.level2", "slider", range:"(16..24)", height: 1, width: 1) {
-            state "level", action:"setLevel2"
-        }
-        
-        valueTile("airFresh_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Air Fresh'
-        }
-        valueTile("airFresh", "device.airFresh", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        valueTile("icePlus_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'IcePlus'
-        }
-        valueTile("icePlus", "device.icePlus", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}', action: "setIcePlusToggle"
-        }
-        
-        valueTile("smartSavingMode_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Smart Saving Mode'
-        }
-        valueTile("smartSavingMode", "device.smartSavingMode", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        valueTile("locking_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Locking'
-        }
-        valueTile("lock", "device.lock", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        valueTile("lastOpen_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Last\nOpen'
-        }
-        valueTile("lastOpen", "device.lastOpen", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-	}
 }
 
 // parse events into attributes
@@ -234,6 +171,6 @@ def _makeCommand(body){
 }
 
 def sendCommand(options, _callback){
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
