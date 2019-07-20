@@ -116,10 +116,10 @@ metadata {
         multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
             tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
               attributeState "on", label:'${name}', action:"switch.off",  backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-dehumidifier-off.png?raw=true"
-                attributeState "off", label:'${name}', action:"", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-dehumidifier-off.png?raw=true"
+                attributeState "off", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-dehumidifier-off.png?raw=true"
                 
                 attributeState "turningOn", label:'${name}', action:"switch.off", backgroundColor:"#00a0dc", nextState:"turningOff", icon:"httpshttps://github.com/fison67/LG-Connector/blob/master/icons/lg-dehumidifier-off.png?raw=true"
-                attributeState "turningOff", label:'${name}', action:"", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-dehumidifier-off.png?raw=true"
+                attributeState "turningOff", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-dehumidifier-off.png?raw=true"
 			}
             
 			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
