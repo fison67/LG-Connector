@@ -45,7 +45,7 @@ If this project helps you, you can give me a cup of coffee<br/>
 
 # Release Notes
 
-### Version: 0.0.2
+### Version: 0.0.3
 ```
 Added support devices.
 ```
