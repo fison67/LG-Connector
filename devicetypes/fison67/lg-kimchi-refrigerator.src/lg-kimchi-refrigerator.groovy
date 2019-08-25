@@ -75,12 +75,7 @@ metadata {
             state "level", action:"setLevel2"
         }
         
-        valueTile("airFresh_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Air Fresh'
-        }
-        valueTile("airFresh", "device.airFresh", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
+
         
         valueTile("icePlus_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'IcePlus'
@@ -95,6 +90,14 @@ metadata {
         valueTile("smartSavingMode", "device.smartSavingMode", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
         }
+*/          
+
+        valueTile("airFresh_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Air Fresh'
+        }
+        valueTile("airFresh", "device.airFresh", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
         
         valueTile("locking_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Locking'
@@ -102,7 +105,7 @@ metadata {
         valueTile("lock", "device.lock", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
         }
-*/        
+      
         valueTile("lastOpen_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Last\nOpen'
         }
@@ -136,70 +139,27 @@ def setData(dataList){
 def setStatus(data){
 	log.debug "${data.data}"
     def jsonObj = new JsonSlurper().parseText(data.data)
-    /*
+    
     if(jsonObj.DoorOpenState){
         sendEvent(name:"contact", value: (jsonObj.DoorOpenState.rValue == "CLOSE" ? "closed" : "open"))
         if(jsonObj.DoorOpenState.rValue == "OPEN"){
             sendEvent(name:"lastOpen", value: new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone))
         }
     }
-    
-    if(jsonObj.TempRefrigerator){
-    	sendEvent(name:"temperature", value: jsonObj.TempRefrigerator.rValue as int)
-    	sendEvent(name:"level", value: jsonObj.TempRefrigerator.rValue as int)
-	}
-    if(jsonObj.TempFreezer){
-    	sendEvent(name:"temperature2", value: jsonObj.TempFreezer.rValue as int)
-    	sendEvent(name:"level2", value: -(jsonObj.TempFreezer.rValue as int))
-    }
-    if(jsonObj.FreshAirFilter){
-    	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter.sValue)
-    }
-    if(jsonObj.SmartSavingModeStatus){
-    	sendEvent(name:"smartSavingMode", value: jsonObj.SmartSavingModeStatus.rValue.toLowerCase())
-    }
     if(jsonObj.LockingStatus){
     	sendEvent(name:"lock", value: jsonObj.LockingStatus.rValue == "UNLOCK" ? "unlocked" : "locked")
     }
-    if(jsonObj.IcePlus){
-    	sendEvent(name:"icePlus", value: jsonObj.IcePlus.value == 2 ? "on" : "off")
+    
+    if(jsonObj.FreshAirFilter){
+    	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter.sValue)
     }
-    */
+   
     updateLastTime();
 }
 
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now, displayed:false)
-}
-
-def setLevel(level){
-    makeCommand("setTemp", level)
-}
-
-def setLevel2(level){
-    makeCommand("setFreezerTemp", -(level))
-}
-
-def setSmartSavingOn(value){
-    makeCommand("setActiveSaving", value)
-}
-
-def setIcePlusToggle(){
-    def status = device.currentValue("icePlus")
-    if(status == "on"){
-    	setIcePlusOff()
-    }else{
-    	setIcePlusOn()
-    }
-}
-
-def setIcePlusOn(){
-    makeCommand("setIcePlus", "on")
-}
-
-def setIcePlusOff(){
-    makeCommand("setIcePlus", "off")
 }
 
 def makeCommand(command, value){
