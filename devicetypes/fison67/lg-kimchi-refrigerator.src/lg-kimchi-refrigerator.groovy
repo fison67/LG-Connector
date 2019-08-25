@@ -39,6 +39,9 @@ metadata {
         
         command "setStatus"
         
+        attribute "leftOrTopRoom", "number"
+        attribute "middlemRoom", "string"
+        attribute "bottomRoom", "number"
 	}
 
 	simulator {
@@ -60,37 +63,28 @@ metadata {
     			attributeState("default", label:'Updated: ${currentValue}')
             }
 		}
-/*        
-        valueTile("temp1_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Temp'
+       
+       
+        valueTile("leftOrTopRoom_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'LeftOrTopRoom'
         }
-        controlTile("temperatureControl", "device.level", "slider", range:"(0..6)", height: 1, width: 1) {
-            state "level", action:"setLevel"
-        }
-        valueTile("temp2_label", "", decoration: "flat", width: 2, height: 1) {
-            state "default", label:'Freezer Temp'
-        }
-        
-        controlTile("temperature2Control", "device.level2", "slider", range:"(16..24)", height: 1, width: 1) {
-            state "level", action:"setLevel2"
-        }
-        
-
-        
-        valueTile("icePlus_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'IcePlus'
-        }
-        valueTile("icePlus", "device.icePlus", decoration: "flat", width: 3, height: 1) {
+        valueTile("leftOrTopRoom", "device.leftOrTopRoom", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}', action: "setIcePlusToggle"
         }
         
-        valueTile("smartSavingMode_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Smart Saving Mode'
+        valueTile("BottomRoom_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'BottomRoom'
         }
-        valueTile("smartSavingMode", "device.smartSavingMode", decoration: "flat", width: 3, height: 1) {
+        valueTile("bottomRoom", "device.bottomRoom", decoration: "flat", width: 3, height: 1) {
             state "default", label:'${currentValue}'
         }
-*/          
+      
+        valueTile("MiddleRoom_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'MiddleRoom'
+        }
+        valueTile("middlemRoom", "device.middlemRoom", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
 
         valueTile("airFresh_label", "", decoration: "flat", width: 3, height: 1) {
             state "default", label:'Air Fresh'
@@ -146,9 +140,31 @@ def setStatus(data){
             sendEvent(name:"lastOpen", value: new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone))
         }
     }
+    if(jsonObj.LeftOrTopRoom){
+    	sendEvent(name:"leftOrTopRoom", value: jsonObj.LeftOrTopRoom.rValue as int)
+    }
+    if(jsonObj.MiddleRoom){
+    	def value = "Middle"
+    	switch(jsonObj.MiddleRoom.value){
+       	case 0:
+        	value = "Middle"
+        	break
+        case 1:
+        	value = "Strong"
+        	break
+        case 2:
+        	value = "Weak"
+        	break
+        }
+    	sendEvent(name:"middlemRoom", value: value)
+    }
+    if(jsonObj.BottomRoom){
+    	sendEvent(name:"bottomRoom", value: jsonObj.BottomRoom.rValue as int)
+    }
     if(jsonObj.LockingStatus){
     	sendEvent(name:"lock", value: jsonObj.LockingStatus.rValue == "UNLOCK" ? "unlocked" : "locked")
     }
+    
     
     if(jsonObj.FreshAirFilter){
     	sendEvent(name:"airFresh", value: jsonObj.FreshAirFilter.sValue)
