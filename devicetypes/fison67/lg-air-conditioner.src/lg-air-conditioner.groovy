@@ -1,5 +1,5 @@
 /**
- *  LG Air Conditioner(v.0.0.1)
+ *  LG Air Conditioner(v.0.0.2)
  *
  * MIT License
  *
@@ -167,14 +167,16 @@ WIND_VALUE = [
 ]
 
 metadata {
-	definition (name: "LG Air Conditioner", namespace: "fison67", author: "fison67") {
-        capability "Switch"
-        capability "Switch Level"
-        capability "Temperature Measurement"
+	definition (name: "LG Air Conditioner", namespace: "fison67", author: "fison67", mnmn:"SmartThings", vid: "SmartThings-smartthings-Z-Wave_Thermostat") {
+        capability "Thermostat"
+        capability "Thermostat Cooling Setpoint"
+		capability "Thermostat Heating Setpoint"
+		capability "Thermostat Operating State"
+        capability "Thermostat Mode"
+        capability "Thermostat Fan Mode"
         capability "Relative Humidity Measurement"
-        capability "Air Conditioner Mode"
-        capability "Dust Sensor"
         capability "Refresh"
+        capability "Dust Sensor"
         
         command "coolMode"
         command "dryMode"
@@ -195,6 +197,8 @@ metadata {
         
         command "setStatus"
         command "control", ["string", "string"]
+        command "tempUp"
+        command "tempDown"
         
         attribute "mode", "string"
         attribute "airClean", "string"
@@ -207,6 +211,7 @@ metadata {
 	}
     
 	preferences {
+        input name: "forceSetStatus", title:"Force to set status" , type: "enum", options: ["on", "off"], required: true, defaultValue: "off"
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
         
         input name: "powerOnValue", title:"Power On Value" , type: "number", required: false, defaultValue: 257
@@ -222,22 +227,55 @@ metadata {
 
 	tiles(scale: 2) {
 		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-            tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-              attributeState "on", label:'${name}', action:"switch.off",  backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-on.png?raw=true"
-                attributeState "off", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-off.png?raw=true"
-                
-                attributeState "turningOn", label:'${name}', action:"switch.off", backgroundColor:"#00a0dc", nextState:"turningOff", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-off.png?raw=true"
-                attributeState "turningOff", label:'${name}', action:"switch.on", backgroundColor:"#ffffff", nextState:"turningOn", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-air-half-on.png?raw=true"
+        multiAttributeTile(name:"thermostatFull", type: "thermostat", width: 6, height: 2){
+
+            tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
+				attributeState("temperature", label:'${currentValue}°',
+					backgroundColors: [
+						// Celsius
+						[value: 0, color: "#153591"],
+						[value: 7, color: "#1e9cbb"],
+						[value: 15, color: "#90d2a7"],
+						[value: 23, color: "#44b621"],
+						[value: 28, color: "#f1d801"],
+						[value: 35, color: "#d04e00"],
+						[value: 37, color: "#bc2323"],
+						// Fahrenheit
+						[value: 40, color: "#153591"],
+						[value: 44, color: "#1e9cbb"],
+						[value: 59, color: "#90d2a7"],
+						[value: 74, color: "#44b621"],
+						[value: 84, color: "#f1d801"],
+						[value: 95, color: "#d04e00"],
+						[value: 96, color: "#bc2323"]
+					]
+				)
 			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
+            tileAttribute("device.thermostatOperatingState", key: "OPERATING_STATE") {
+				attributeState("idle", backgroundColor: "#cccccc")
+				attributeState("cooling", backgroundColor: "#00A0DC")
+			}
+			tileAttribute("device.thermostatMode", key: "THERMOSTAT_MODE") {
+				attributeState("off", action: "setThermostatMode", label: "Off", icon: "st.thermostat.heating-cooling-off")
+				attributeState("cool", action: "setThermostatMode", label: "Cool", icon: "st.thermostat.cool")
+			}
+            tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
+                attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
+            }
+            tileAttribute("device.coolingSetpoint", key: "VALUE_CONTROL") {
+                attributeState("VALUE_UP", action: "tempUp")
+                attributeState("VALUE_DOWN", action: "tempDown")
+            }
+            tileAttribute("device.coolingSetpoint", key: "COOLING_SETPOINT") {
+                attributeState("coolingSetpoint", label:'${currentValue}', unit:"dF", defaultState: true)
             }
 		}
-        controlTile("temperatureControl", "device.level", "slider", range:"(18..30)", height: 2, width: 2) {
-            state "level", action:"setLevel"
+        
+        standardTile("thermostatMode2", "device.thermostatMode", inactiveLabel: false, width: 2, height: 2) {
+            state "cool", label:'COOL', action:"off", backgroundColor:"#73C1EC", nextState:"off"
+            state "off", label:'OFF', action:"cool", backgroundColor:"#ffffff", nextState:"cool"
         }
+        
         valueTile("mode", "device.mode", decoration: "flat", width: 4, height: 1) {
             state "default", label:'${currentValue}'
         }
@@ -320,7 +358,7 @@ def setData(dataList){
 }
 
 def setStatus(data){
-//	log.debug "Update >> ${data.key} >> ${data.data}"
+	log.debug "Update >> ${data.key} >> ${data.data}"
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.Operation){
@@ -335,8 +373,12 @@ def setStatus(data){
                 sendEvent(name: "fineDustLevel", value: jsonObj.SensorPM2.value as int, displayText: "PM2 is " + jsonObj.SensorPM2.value)
             }
             if(jsonObj.SensorPM1){
-                sendEvent(name: "fineDustLevel", value: jsonObj.SensorPM1.value as int, displayText: "PM1 is " + jsonObj.SensorPM1.value)
+                sendEvent(name: "pm1", value: jsonObj.SensorPM1.value as int, displayText: "PM1 is " + jsonObj.SensorPM1.value)
             }
+        }
+        
+        if(power == "off"){
+        	sendEvent(name: "thermostatMode", value: "off")
         }
 
     }
@@ -344,7 +386,7 @@ def setStatus(data){
     	sendEvent(name: "temperature", value: jsonObj.TempCur.value, displayed: false)
     }
     if(jsonObj.TempCfg){
-    	sendEvent(name: "level", value: jsonObj.TempCfg.value)
+    	sendEvent(name: "coolingSetpoint", value: jsonObj.TempCfg.value)
     }
     if(jsonObj.SensorHumidity){
     	sendEvent(name:"humidity", value: jsonObj.SensorHumidity.value as int)
@@ -352,6 +394,21 @@ def setStatus(data){
     if(jsonObj.OpMode){
     	sendEvent(name: "mode", value: OP_MODE_VALUE[jsonObj.OpMode.value as int]["str"][language])
     	sendEvent(name: "airConditionerMode", value: OP_MODE_VALUE[jsonObj.OpMode.value as int]["str"]["EN"])
+        if(device.currentValue("switch") == "on"){
+            switch(jsonObj.OpMode.value as int){
+            case 0:
+                sendEvent(name: "thermostatOperatingState", value: "cooling")
+            	sendEvent(name: "thermostatMode", value: "cool")
+                break
+            case 4:
+                sendEvent(name: "thermostatOperatingState", value: "heating")
+            	sendEvent(name: "thermostatMode", value: "heat")
+                break
+            }
+        }else{
+            sendEvent(name: "thermostatOperatingState", value: "idle")
+            sendEvent(name: "thermostatMode", value: "off")
+        }
     }
     
     if(jsonObj.AirClean){
@@ -366,17 +423,87 @@ def setStatus(data){
     updateLastTime();
 }
 
+def installed(){
+    sendEvent(name: "supportedThermostatFanModes", value: ["auto", "circulate", "followschedule", "on"])
+    sendEvent(name: "supportedThermostatModes", value: ["auto", "cool", "heat", "off"])
+}
+
 def updateLastTime(){
 	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
     sendEvent(name: "lastCheckin", value: now, displayed:false)
 }
 
-def setAirConditionerMode(mode){
-
+def fanOn(){
+	wind1()
 }
 
-def setLevel(level){
-	makeCommand("SetTempCfg", '{"TempCfg":"' + level + '"}')
+def fanAuto(){
+	wind2()
+}
+
+def tempUp(){
+	def cur = device.currentValue("coolingSetpoint")
+    if(cur == null){
+    	cur = 26
+    }
+	def temperature = (cur as int) + 1
+	log.debug "temperature: " + temperature
+    setCoolingSetpoint(temperature)
+}
+
+def tempDown(){
+	def cur = device.currentValue("coolingSetpoint")
+    if(cur == null){
+    	cur = 26
+    }
+	def temperature = (cur as int) - 1
+    setCoolingSetpoint(temperature)
+}
+
+def setThermostatMode(mode){
+    log.debug "setThermostatMode " + mode
+    switch(mode){
+    case "off":
+        off()
+        if(forceSetStatus == "on"){
+        	sendEvent(name: "thermostatMode", value: "off")
+        }
+        break
+    case "cool":
+    	cool()
+    	break
+    case "heat":
+    	heat()
+        break
+    }
+}
+
+def setCoolingSetpoint(level){
+    if(device.currentValue("thermostatMode") == "off"){
+        log.debug "setCoolingSetpoint >> just power on"
+        cool()   
+    }else{
+        def targetTemp = level.intValue()
+        log.debug "setCoolingSetpoint " + targetTemp
+        if(forceSetStatus == "on"){
+        	sendEvent(name: "coolingSetpoint", value: targetTemp)
+        }
+	    makeCommand("SetTempCfg", '{"TempCfg":"' + targetTemp + '"}')
+    }
+}
+
+def setHeatingSetpoint(level){
+    if(device.currentValue("thermostatMode") == "off"){
+        log.debug "setHeatingSetpoint >> just power on"
+        heat()   
+    }else{
+        def targetTemp = level.intValue()
+        log.debug "setHeatingSetpoint " + targetTemp
+        if(forceSetStatus == "on"){
+        	sendEvent(name: "heatingSetpoint", value: targetTemp)
+        }
+	    makeCommand("SetTempCfg", '{"TempCfg":"' + targetTemp + '"}')
+    }
 }
 
 def wind(val){
@@ -402,11 +529,28 @@ def wind6(){
     wind(wind6)
 }
 
-def on(){
-	makeCommand("SetOperation", powerOnValue.toString() == null ? "257" : powerOnValue.toString())
+def cool(){
+	if(forceSetStatus == "on"){
+    	sendEvent(name: "thermostatMode", value: "cool")
+    }
+    makeCommand("SetOperation", powerOnValue.toString() == null ? "257" : powerOnValue.toString())
+}
+
+def auto(){
+	cool()
+}
+
+def heat(){
+	if(forceSetStatus == "on"){
+    	sendEvent(name: "thermostatMode", value: "heat")
+    }
+    makeCommand("SetOperation", "4")
 }
 
 def off(){
+	if(forceSetStatus == "on"){
+    	sendEvent(name: "thermostatMode", value: "off")
+    }
 	makeCommand("SetOperation", powerOffValue.toString() == null ? "0" : powerOffValue.toString())
 }
 
@@ -464,6 +608,7 @@ def makeCommand(command, value){
         "command": command,
         "value": value
     ]
+    log.debug body
     def options = _makeCommand(body)
     sendCommand(options, null)
 }
