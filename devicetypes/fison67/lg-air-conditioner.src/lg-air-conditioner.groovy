@@ -328,6 +328,10 @@ metadata {
         valueTile("wind6", "device.wind6", decoration: "flat", height: 1, width: 2) {
 			state "default", label:'${currentValue}', action: "wind6"
 		}
+        
+        main (["thermostatMode2"])
+        details(["thermostatFull", "thermostatMode2", "mode", "wind", "coolMode", "dryMode", "aiMode", "heatMode", "airCleanMode", "acoMode", "aromaMode", "evenrgySaveMode",
+        "empty", "wind1", "wind2", "wind3", "wind4", "wind5", "wind6"])
 	}
 }
 
