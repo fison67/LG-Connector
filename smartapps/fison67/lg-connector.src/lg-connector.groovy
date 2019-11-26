@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.5)
+ *  LG Connector (v.0.0.6)
  *
  * MIT License
  *
@@ -53,8 +53,8 @@ def mainPage() {
 	def languageList = ["English", "Korean"]
     dynamicPage(name: "mainPage", title: "LG Connector", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
-        	input "address", "string", title: "Server address", required: true
-        	input "address2", "string", title: "Port forwarding Server address", required: false
+        	input "address", "text", title: "Server address", required: true
+        	input "address2", "text", title: "Port forwarding Server address", required: false
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
         	href url:"http://${settings.address}", style:"embedded", required:false, title:"Local Management", description:"This makes you easy to setup"
         	href url:"http://${settings.address2}", style:"embedded", required:false, title:"External Management", description:"This makes you easy to setup"
@@ -89,6 +89,10 @@ def updated() {
     log.debug "Updated with settings: ${settings}"
 
     initialize()
+}
+
+def getServerAddress(){
+     return settings.address
 }
 
 /**
