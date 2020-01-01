@@ -91,8 +91,8 @@ LG Dryer<br/>
 ### Stable Versions
 | Docker tag |
 | ------------- |
-|fison67/lg-connector:0.0.2|
-|fison67/lg-connector-rasp:0.0.2|
+|fison67/lg-connector:0.0.3|
+|fison67/lg-connector-rasp:0.0.3|
 <br/><br/>
 
 
