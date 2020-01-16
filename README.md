@@ -91,8 +91,8 @@ LG Dryer<br/>
 ### Stable Versions
 | Docker tag |
 | ------------- |
-|fison67/lg-connector:0.0.2|
-|fison67/lg-connector-rasp:0.0.2|
+|fison67/lg-connector:0.0.3|
+|fison67/lg-connector-rasp:0.0.3|
 <br/><br/>
 
 
@@ -104,8 +104,8 @@ LG Dryer<br/>
 sudo mkdir /docker
 sudo mkdir /docker/lg-connector
 sudo chown -R pi:pi /docker
-docker pull fison67/lg-connector-rasp:0.0.2
-docker run -d --restart=always -v /docker/lg-connector:/config --name=lg-connector-rasp --net=host fison67/lg-connector-rasp:0.0.2
+docker pull fison67/lg-connector-rasp:0.0.3
+docker run -d --restart=always -v /docker/lg-connector:/config --name=lg-connector-rasp --net=host fison67/lg-connector-rasp:0.0.3
 ```
 
 ### Synology NAS
