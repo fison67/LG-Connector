@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.7)
+ *  LG Connector (v.0.0.8)
  *
  * MIT License
  *
@@ -188,8 +188,10 @@ def getDataList(){
 def addDevice(){
     def address = params.address
     def type = params.type
+    def version = params.version
+    def name = params.name
     
-    log.debug("Try >> ADD LG Device ip=${address} type=${type}")
+    log.info("Try >> ADD LG Device ip=${address} type=${type} version=${version} name=${name}")
 	
     def dni = "lg-connector-" + address
     log.debug("DNI >> " + dni)
@@ -215,11 +217,19 @@ def addDevice(){
         }else if(type == "robot_cleaner"){
         	dth = "LG Robot Cleaner"
         }
+        def label = dth
+        if(name != null){
+        	label = name
+        }
         
-        def name = dth;
+        if(version == "2"){
+        	dth = dth + " v2"
+        }
+        log.debug "DTH : " + dth
+        
         if(dth != ""){
         	def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
-                "label": dth
+                "label": label
             ])    
             childDevice.setInfo(settings.address, address)
             log.debug "Success >> ADD Device DNI=${dni} ${name}"
@@ -236,7 +246,7 @@ def addDevice(){
 
 def updateDevice(){
     def data = request.JSON
-    
+    log.debug data
     def address = data.id
     def dni = "lg-connector-" + address
     def chlid = getChildDevice(dni)
