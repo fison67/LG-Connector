@@ -248,11 +248,11 @@ def setLevel(level){
 }
 
 def on(){
-
+	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":"1"}')
 }
 
 def off(){
-
+	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":"0"}')
 }
 
 def setMode(val){
@@ -312,7 +312,7 @@ def makeCommand(command, value){
 def _makeCommand(body){
 	def options = [
      	"method": "POST",
-        "path": "/devices/control",
+        "path": "/devices/control2",
         "headers": [
         	"HOST": state.app_url,
             "Content-Type": "application/json"
