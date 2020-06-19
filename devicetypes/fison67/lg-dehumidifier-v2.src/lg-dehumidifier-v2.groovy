@@ -3,7 +3,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2019 fison67@nate.com
+ * Copyright (c) 2020 fison67@nate.com
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -227,6 +227,11 @@ def setStatus(data){
         
         if(report["airState.windStrength"] != null){
         	sendEvent(name: "wind", value: WIND_VALUE[report["airState.windStrength"]]["str"][language])
+        }
+        
+        if(report["airState.tempState.current"] != null){
+            sendEvent(name: "water", value: (report["airState.tempState.current"] == -9 ?  "wet" : "dry"))
+            sendEvent(name: "waterStatus", value: (report["airState.tempState.current"] == -9 ?  "Full" : "Not Full"))
         }
     }
     
