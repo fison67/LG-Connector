@@ -229,10 +229,10 @@ def setStatus(data){
         	sendEvent(name: "wind", value: WIND_VALUE[report["airState.windStrength"]]["str"][language])
         }
         
-        if(report["airState.tempState.current"] != null){
-            sendEvent(name: "water", value: (report["airState.tempState.current"] == -9 ?  "wet" : "dry"))
-            sendEvent(name: "waterStatus", value: (report["airState.tempState.current"] == -9 ?  "Full" : "Not Full"))
-        }
+ //       if(report["airState.tempState.current"] != null){
+ //           sendEvent(name: "water", value: (report["airState.tempState.current"] == -9 ?  "wet" : "dry"))
+ //           sendEvent(name: "waterStatus", value: (report["airState.tempState.current"] == -9 ?  "Full" : "Not Full"))
+ //       }
     }
     
     updateLastTime();
@@ -248,11 +248,11 @@ def setLevel(level){
 }
 
 def on(){
-	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":"1"}')
+	makeCommand('', '{"id":"' + state.id + '","value":{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":1}}')
 }
 
 def off(){
-	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":"0"}')
+	makeCommand('', '{"id":"' + state.id + '","value":{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":0}}')
 }
 
 def setMode(val){
