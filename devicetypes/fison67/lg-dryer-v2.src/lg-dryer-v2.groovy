@@ -105,20 +105,24 @@ def setData(dataList){
 }
 
 def getStateStr(state){
-	if(state == "INITIAL"){
-    	return "대기 중"
-    }else if(state == "RUNNING"){
-    	return "건조 중"
-    }else if(state == "POWEROFF"){
-    	return "종료"
-    }else if(state == "PAUSE"){
-    	return "일시정지 중"
-    }else if(state == "ERROR"){
-    	return "에러 발생"
-    }else if(state == "END"){
-    	return "종료 상태"
-    }else{
+	if(language == "EN"){
     	return state
+    }else{
+        if(state == "INITIAL"){
+            return "대기 중"
+        }else if(state == "RUNNING"){
+            return "건조 중"
+        }else if(state == "POWEROFF"){
+            return "종료"
+        }else if(state == "PAUSE"){
+            return "일시정지 중"
+        }else if(state == "ERROR"){
+            return "에러 발생"
+        }else if(state == "END"){
+            return "종료 상태"
+        }else{
+            return state
+        }
     }
 }
 
