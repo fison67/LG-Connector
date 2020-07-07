@@ -104,34 +104,37 @@ def setInfo(String app_url, String address) {
 }
 
 def getStateStr(state){
-	if(state == "INITIAL"){
-    	return "대기 중"
-    }else if(state == "DETECTING"){
-    	return "옷감량 확인 중"
-    }else if(state == "POWEROFF"){
-    	return "종료"
-    }else if(state == "PAUSE"){
-    	return "일시정지 중"
-    }else if(state == "ERROR"){
-    	return "에러 발생"
-    }else if(state == "END"){
-    	return "종료 상태"
-	}else if(state == "RUNNING"){
-		return "세탁 중"
-    }else if(state == "PREWASH"){
-		return "애벌세탁 중"
-    }else if(state == "RINSING"){
-		return "헹굼 중"
-    }else if(state == "FRESHCARE"){
-		return "구김방지 중"
-    }else if(state == "SPINNING"){
-		return "탈수 중"
-	}else if(state == "DRYING"){
-		return "건조 중"
-    }else{
+	if(language == "EN"){
     	return state
-    }
-	
+    }else{
+        if(state == "INITIAL"){
+            return "대기 중"
+        }else if(state == "DETECTING"){
+            return "옷감량 확인 중"
+        }else if(state == "POWEROFF"){
+            return "종료"
+        }else if(state == "PAUSE"){
+            return "일시정지 중"
+        }else if(state == "ERROR"){
+            return "에러 발생"
+        }else if(state == "END"){
+            return "종료 상태"
+        }else if(state == "RUNNING"){
+            return "세탁 중"
+        }else if(state == "PREWASH"){
+            return "애벌세탁 중"
+        }else if(state == "RINSING"){
+            return "헹굼 중"
+        }else if(state == "FRESHCARE"){
+            return "구김방지 중"
+        }else if(state == "SPINNING"){
+            return "탈수 중"
+        }else if(state == "DRYING"){
+            return "건조 중"
+        }else{
+            return state
+        }
+	}
 }
 
 def setStatus(data){
