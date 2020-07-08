@@ -193,6 +193,17 @@ def parse(String description) {
 
 def updated() {
 	log.debug "updated"
+    
+    sendEvent(name: "mode1", value: OPERATION_VALUE[mode1]["str"][language])
+	sendEvent(name: "mode2", value: OPERATION_VALUE[mode1]["str"][language])
+	sendEvent(name: "mode3", value: OPERATION_VALUE[mode2]["str"][language])
+	sendEvent(name: "mode4", value: OPERATION_VALUE[mode3]["str"][language])
+	sendEvent(name: "mode5", value: OPERATION_VALUE[mode4]["str"][language])
+    
+	sendEvent(name: "wind1", value: WIND_VALUE[wind1]["str"][language])
+	sendEvent(name: "wind2", value: WIND_VALUE[wind2]["str"][language])
+	sendEvent(name: "wind3", value: WIND_VALUE[wind3]["str"][language])
+	sendEvent(name: "wind4", value: WIND_VALUE[wind4]["str"][language])
 }
 
 def setInfo(String app_url, String address) {
@@ -249,14 +260,7 @@ def updateLastTime(){
 }
 
 def setLevel(level){
-	def value = level
-    if(value < 30){
-    	value = 30
-    }
-    if(value > 70){
-    	value = 70
-    }
-	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.humidity.desired","dataValue":' + value + '}')
+	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.humidity.desired","dataValue":' + level + '}')
 }
 
 def on(){
