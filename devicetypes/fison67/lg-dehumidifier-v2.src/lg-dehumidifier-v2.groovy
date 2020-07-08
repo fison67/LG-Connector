@@ -271,7 +271,7 @@ def off(){
 	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":0}')
 }
 
-def setMode(val){
+def setMode(value){
 	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.opMode","dataValue":' + value + '}')
 }
 
