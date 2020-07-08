@@ -167,15 +167,18 @@ metadata {
         valueTile("mode5", "device.mode5", decoration: "flat", height: 1, width: 1) {
 			state "default", label:'${currentValue}', action: "mode5"
 		}
-        valueTile("mode6", "device.mode6", decoration: "flat", height: 1, width: 1) {
-			state "default", label:'${currentValue}', action: "mode6"
-		}
         
         valueTile("wind1", "device.wind1", decoration: "flat", height: 1, width: 1) {
 			state "default", label:'${currentValue}', action: "wind1"
 		}
         valueTile("wind2", "device.wind2", decoration: "flat", height: 1, width: 1) {
 			state "default", label:'${currentValue}', action: "wind2"
+		}
+        valueTile("wind3", "device.wind3", decoration: "flat", height: 1, width: 1) {
+			state "default", label:'${currentValue}', action: "wind3"
+		}
+        valueTile("wind4", "device.wind4", decoration: "flat", height: 1, width: 1) {
+			state "default", label:'${currentValue}', action: "wind4"
 		}
         valueTile("waterStatus", "device.waterStatus", decoration: "flat", height: 1, width: 4) {
 			state "default", label:'Water Tank: ${currentValue}'
