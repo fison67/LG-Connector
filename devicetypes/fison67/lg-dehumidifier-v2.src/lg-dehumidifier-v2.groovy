@@ -87,11 +87,12 @@ metadata {
         command "mode3"
         command "mode4"
         command "mode5"
-        command "mode6"
         
         command "setWind", ["number"]
         command "wind1"
         command "wind2"
+        command "wind3"
+        command "wind4"
 	}
 
 	simulator {
@@ -100,15 +101,16 @@ metadata {
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
         
-        input name: "mode1", title:"Mode#1 Type" , type: "number", required: false, defaultValue: 17
-        input name: "mode2", title:"Mode#2 Type" , type: "number", required: false, defaultValue: 18
-        input name: "mode3", title:"Mode#3 Type" , type: "number", required: false, defaultValue: 19
-        input name: "mode4", title:"Mode#4 Type" , type: "number", required: false, defaultValue: 20
-        input name: "mode5", title:"Mode#5 Type" , type: "number", required: false, defaultValue: 21
-        input name: "mode6", title:"Mode#6 Type" , type: "number", required: false, defaultValue: 22
+        input name: "mode1", title:"Mode#1 Type" , type: "number", required: false, defaultValue: 18
+        input name: "mode2", title:"Mode#2 Type" , type: "number", required: false, defaultValue: 19
+        input name: "mode3", title:"Mode#3 Type" , type: "number", required: false, defaultValue: 20
+        input name: "mode4", title:"Mode#4 Type" , type: "number", required: false, defaultValue: 21
+        input name: "mode5", title:"Mode#5 Type" , type: "number", required: false, defaultValue: 22
         
-        input name: "wind1", title:"Wind#1 Type" , type: "number", required: false, defaultValue: 6
-        input name: "wind2", title:"Wind#2 Type" , type: "number", required: false, defaultValue: 2
+        input name: "wind1", title:"Wind#1 Type" , type: "number", required: false, defaultValue: 3
+        input name: "wind2", title:"Wind#2 Type" , type: "number", required: false, defaultValue: 7
+        input name: "wind3", title:"Wind#3 Type" , type: "number", required: false, defaultValue: 13
+        input name: "wind4", title:"Wind#4 Type" , type: "number", required: false, defaultValue: 17
 	}
 
 	tiles(scale: 2) {
@@ -244,21 +246,26 @@ def updateLastTime(){
 }
 
 def setLevel(level){
-	
+	def value = level
+    if(value < 30){
+    	value = 30
+    }
+    if(value > 70){
+    	value = 70
+    }
+	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.humidity.desired","dataValue":' + value + '}')
 }
 
 def on(){
 	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":1}')
-	makeCommand('', '{"id":"' + state.id + '","value":{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":1}}')
 }
 
 def off(){
 	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":0}')
-	makeCommand('', '{"id":"' + state.id + '","value":{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":0}}')
 }
 
 def setMode(val){
-
+	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.opMode","dataValue":' + value + '}')
 }
 
 def mode1(){
@@ -281,12 +288,8 @@ def mode5(){
     setMode(mode5)
 }
 
-def mode6(){
-    setMode(mode6)
-}
-
-def setWind(val){
-
+def setWind(value){
+	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.windStrength","dataValue":' + value + '}')
 }
 
 def wind1(){
@@ -295,6 +298,14 @@ def wind1(){
 
 def wind2(){
     setWind(wind2)
+}
+
+def wind3(){
+    setWind(wind3)
+}
+
+def wind4(){
+    setWind(wind4)
 }
 
 def control(cmd, value){
