@@ -248,10 +248,12 @@ def setLevel(level){
 }
 
 def on(){
+	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":1}')
 	makeCommand('', '{"id":"' + state.id + '","value":{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":1}}')
 }
 
 def off(){
+	makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":0}')
 	makeCommand('', '{"id":"' + state.id + '","value":{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":0}}')
 }
 
