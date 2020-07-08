@@ -195,10 +195,10 @@ def updated() {
 	log.debug "updated"
     
     sendEvent(name: "mode1", value: OPERATION_VALUE[mode1]["str"][language])
-	sendEvent(name: "mode2", value: OPERATION_VALUE[mode1]["str"][language])
-	sendEvent(name: "mode3", value: OPERATION_VALUE[mode2]["str"][language])
-	sendEvent(name: "mode4", value: OPERATION_VALUE[mode3]["str"][language])
-	sendEvent(name: "mode5", value: OPERATION_VALUE[mode4]["str"][language])
+	sendEvent(name: "mode2", value: OPERATION_VALUE[mode2]["str"][language])
+	sendEvent(name: "mode3", value: OPERATION_VALUE[mode3]["str"][language])
+	sendEvent(name: "mode4", value: OPERATION_VALUE[mode4]["str"][language])
+	sendEvent(name: "mode5", value: OPERATION_VALUE[mode5]["str"][language])
     
 	sendEvent(name: "wind1", value: WIND_VALUE[wind1]["str"][language])
 	sendEvent(name: "wind2", value: WIND_VALUE[wind2]["str"][language])
@@ -276,23 +276,23 @@ def setMode(val){
 }
 
 def mode1(){
-    setMode(mode1)
+    setMode(settings.mode1)
 }
 
 def mode2(){
-    setMode(mode2)
+    setMode(settings.mode2)
 }
 
 def mode3(){
-    setMode(mode3)
+    setMode(settings.mode3)
 }
 
 def mode4(){
-    setMode(mode4)
+    setMode(settings.mode4)
 }
 
 def mode5(){
-    setMode(mode5)
+    setMode(settings.mode5)
 }
 
 def setWind(value){
