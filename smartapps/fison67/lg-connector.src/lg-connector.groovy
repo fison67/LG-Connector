@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.8)
+ *  LG Connector (v.0.0.9)
  *
  * MIT License
  *
@@ -216,6 +216,8 @@ def addDevice(){
         	dth = "LG Kimchi Refrigerator"
         }else if(type == "robot_cleaner"){
         	dth = "LG Robot Cleaner"
+        }else if(type == "code_zero"){
+        	dth = "LG Code Zero"
         }
         def label = dth
         if(name != null){
