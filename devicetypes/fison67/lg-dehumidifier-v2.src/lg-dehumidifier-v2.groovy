@@ -91,8 +91,6 @@ metadata {
         command "setWind", ["number"]
         command "wind1"
         command "wind2"
-        command "wind3"
-        command "wind4"
 	}
 
 	simulator {
@@ -101,16 +99,14 @@ metadata {
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
         
-        input name: "mode1", title:"Mode#1 Type" , type: "number", required: false, defaultValue: 18
-        input name: "mode2", title:"Mode#2 Type" , type: "number", required: false, defaultValue: 19
-        input name: "mode3", title:"Mode#3 Type" , type: "number", required: false, defaultValue: 20
-        input name: "mode4", title:"Mode#4 Type" , type: "number", required: false, defaultValue: 21
-        input name: "mode5", title:"Mode#5 Type" , type: "number", required: false, defaultValue: 22
+        input name: "mode1", title:"Mode#1 Type" , type: "number", required: false, defaultValue: 17
+        input name: "mode2", title:"Mode#2 Type" , type: "number", required: false, defaultValue: 18
+        input name: "mode3", title:"Mode#3 Type" , type: "number", required: false, defaultValue: 19
+        input name: "mode4", title:"Mode#4 Type" , type: "number", required: false, defaultValue: 20
+        input name: "mode5", title:"Mode#5 Type" , type: "number", required: false, defaultValue: 21
         
-        input name: "wind1", title:"Wind#1 Type" , type: "number", required: false, defaultValue: 3
-        input name: "wind2", title:"Wind#2 Type" , type: "number", required: false, defaultValue: 7
-        input name: "wind3", title:"Wind#3 Type" , type: "number", required: false, defaultValue: 13
-        input name: "wind4", title:"Wind#4 Type" , type: "number", required: false, defaultValue: 17
+        input name: "wind1", title:"Wind#1 Type" , type: "number", required: false, defaultValue: 2
+        input name: "wind2", title:"Wind#2 Type" , type: "number", required: false, defaultValue: 6
 	}
 
 	tiles(scale: 2) {
@@ -305,14 +301,6 @@ def wind1(){
 
 def wind2(){
     setWind(wind2)
-}
-
-def wind3(){
-    setWind(wind3)
-}
-
-def wind4(){
-    setWind(wind4)
 }
 
 def control(cmd, value){
