@@ -57,6 +57,25 @@ metadata {
     			attributeState("default", label:'Updated: ${currentValue}')
             }
 		}
+        
+        valueTile("status_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Status'
+        }
+        valueTile("status", "device.status", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        valueTile("cleanMode_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Clean Mode'
+        }
+        valueTile("cleanMode", "device.cleanMode", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
+        valueTile("batteryLevel_label", "", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'Battery'
+        }
+        valueTile("batteryLevel", "device.batteryLevel", decoration: "flat", width: 3, height: 1) {
+            state "default", label:'${currentValue}'
+        }
 	}
 }
 
