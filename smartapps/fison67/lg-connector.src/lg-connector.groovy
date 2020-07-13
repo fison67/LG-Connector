@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.10)
+ *  LG Connector (v.0.0.11)
  *
  * MIT License
  *
@@ -220,6 +220,8 @@ def addDevice(){
         	dth = "LG Code Zero"
         }else if(type == "styler"){
         	dth = "LG Styler"
+        }else if(type == "oven"){
+        	dth = "LG Oven"
         }
         def label = dth
         if(name != null){
