@@ -102,7 +102,31 @@ def getCoureStr(cource){
 	if(language == "EN"){
     	return state
     }else {
-    	return state
+    	if(state == "STANDARD"){
+            return "스타일링 표준"
+        }else if(state == "QUICK"){
+            return "스타일링 급속"
+        }else if(state == "STRONG"){
+            return "스타일링 강력"
+        }else if(state == "SUITS_COATS"){
+            return "고급의류 정장/코트"
+        }else if(state == "WOOL_KNITTED"){
+            return "고급의류 울/니트"
+        }else if(state == "COURSE_CLOTH_FUNTIONAL"){
+            return "고급의류 기능성"
+        }else if(state == "SANITARY_STANDARD"){
+            return "위생살균 침구"
+        }else if(state == "BEDDINGS"){
+            return "위생살균 침구"
+        }else if(state == "FINEDUST"){
+            return "맞춤건조 자동건조"
+        }else if(state == "VIRUS"){
+            return "위생살균 바이러스"
+        }else if(state == "TIME_DRY_INSIDE_120"){
+            return "예약"
+        }else{
+            return state
+        }
     }
 }
 
