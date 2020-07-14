@@ -1,5 +1,5 @@
 /**
- *  LG Air PuriFier(v.0.0.1)
+ *  LG Air PuriFier(v.0.0.2)
  *
  * MIT License
  *
@@ -32,6 +32,19 @@ import groovy.transform.Field
 
 @Field
 OPERATION_VALUE = [
+    0: [val: "@AC_MAIN_OPERATION_MODE_COOL_W", str: ["EN": "Cool", "KR": "Cool"]],
+	1: [val: "@AC_MAIN_OPERATION_MODE_DRY_W", str: ["EN": "Dry", "KR": "Dry"]],
+    2: [val: "@AC_MAIN_OPERATION_MODE_FAN_W", str: ["EN": "Fan", "KR": "Fan"]],
+    3: [val: "@AC_MAIN_OPERATION_MODE_AI_W", str: ["EN": "AI", "KR": "AI"]],
+    4: [val: "@AC_MAIN_OPERATION_MODE_HEAT_W", str: ["EN": "Heat", "KR": "Heat"]],
+    5: [val: "@AC_MAIN_OPERATION_MODE_AIRCLEAN_W", str: ["EN": "Air Clean", "KR": "공기청정"]],
+    6: [val: "@AC_MAIN_OPERATION_MODE_ACO_W", str: ["EN": "Aco", "KR": "Aco"]],
+    7: [val: "@AC_MAIN_OPERATION_MODE_AROMA_W", str: ["EN": "Aroma", "KR": "아로마"]],
+    8: [val: "@AC_MAIN_OPERATION_MODE_ENERGY_SAVING_W", str: ["EN": "Energy Saving", "KR": "Energy saving"]],
+    9: [val: "@AP_MAIN_MID_OPMODE_CLEAN_W", str: ["EN": "Clean", "KR": "청정"]],
+    10: [val: "@AP_MAIN_MID_OPMODE_SLEEP_W", str: ["EN": "Sleep", "KR": "취침"]],
+    11: [val: "@AP_MAIN_MID_OPMODE_SILENT_W", str: ["EN": "Silent", "KR": "정음청정"]],
+    12: [val: "@AP_MAIN_MID_OPMODE_HUMIDITY_W", str: ["EN": "Humidity", "KR": "가습"]],
     13: [val: "@AP_MAIN_MID_OPMODE_CIRCULATOR_CLEAN_W", str: ["EN": "Clean Booster", "KR": "클린부스터"]],
     14: [val: "@AP_MAIN_MID_OPMODE_BABY_CARE_W", str: ["EN": "Baby Care", "KR": "싱글청정"]],
     15: [val: "@AP_MAIN_MID_OPMODE_DUAL_CLEAN_W", str: ["EN": "Dual Clean", "KR": "듀얼청정"]],
@@ -316,7 +329,7 @@ def setData(dataList){
 }
 
 def setStatus(data){
-//	log.debug "Update >> ${data.key} >> ${data.data}"
+	log.debug "Update >> ${data.key} >> ${data.data}"
     def jsonObj = new JsonSlurper().parseText(data.data)
     
     if(jsonObj.Operation){
@@ -489,7 +502,7 @@ def _makeCommand(body){
      	"method": "POST",
         "path": "/devices/control",
         "headers": [
-        	"HOST": state.app_url,
+        	"HOST": parent.getServerAddress(),
             "Content-Type": "application/json"
         ],
         "body":body
