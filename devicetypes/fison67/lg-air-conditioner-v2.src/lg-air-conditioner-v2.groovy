@@ -381,7 +381,7 @@ def setStatus(data){
             sendEvent(name: "airConditionerMode", value: OP_MODE_VALUE[report["airState.opMode"]]["str"]["EN"])
             
             if(device.currentValue("switch") == "on"){
-                switch(jsonObj.OpMode.value as int){
+                switch(report["airState.opMode"]){
                 case 0:
                     sendEvent(name: "thermostatOperatingState", value: "cooling")
                     sendEvent(name: "thermostatMode", value: "cool")
