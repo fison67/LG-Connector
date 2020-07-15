@@ -539,7 +539,7 @@ def leftOn(){
 }
 
 def cool(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + (powerOnValue.toString() == null ? "257" : powerOnValue.toString()) + '}')
+    makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + (powerOnValue.toString() == null ? "257" : powerOnValue.toString()) + '}')
 }
 
 def auto(){
@@ -547,11 +547,11 @@ def auto(){
 }
 
 def heat(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + 4 + '}')
+    makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + 4 + '}')
 }
 
 def off(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + (powerOffValue.toString() == null ? "0" : powerOffValue.toString()) + '}')
+    makeCommand('', '{"command":"Operation","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + (powerOffValue.toString() == null ? "0" : powerOffValue.toString()) + '}')
 }
 
 def airCleanOn(){
