@@ -373,7 +373,7 @@ def setStatus(data){
     	def report = jsonObj.data.state.reported
         
         if(report["airState.operation"] != null){
-    		sendEvent(name: "switch", value: report["airState.operation"] == "0" ? "off" : "on")
+    		sendEvent(name: "switch", value: report["airState.operation"] == 0 ? "off" : "on")
         }
         
         if(report["airState.opMode"] != null){
