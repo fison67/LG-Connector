@@ -99,7 +99,7 @@ def setStatus(data){
     	def report = jsonObj.data.state.reported
         
         if(report["refState"] != null){
-        	def refState = report["kmcState"]
+        	def refState = report["refState"]
             
             if(refState["atLeastOneDoorOpen"] != null){
         		sendEvent(name:"contact", value: (refState["atLeastOneDoorOpen"] == "CLOSE" ? "closed" : "open"))
