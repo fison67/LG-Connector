@@ -105,7 +105,7 @@ def setInfo(String app_url, String address) {
     state.id = address
 }
 
-def getStateStr(cource){
+def getStateStr(state){
 	if(language == "EN"){
     	return state
     }else {
