@@ -1,5 +1,5 @@
 /**
- *  LG Warsher v2(v.0.0.1)
+ *  LG Warsher v2(v.0.0.2)
  *
  * MIT License
  *
@@ -32,7 +32,7 @@ import groovy.time.TimeCategory
 
 
 metadata {
-	definition (name: "LG Washer v2", namespace: "fison67", author: "fison67") {
+	definition (name: "LG Washer v2", namespace: "fison67", author: "fison67", ocfDeviceType:"oic.d.washer") {
         capability "Switch"
         capability "Sensor"
         capability "Washer Operating State"
