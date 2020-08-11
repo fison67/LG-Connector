@@ -1,5 +1,5 @@
 /**
- *  LG Warsher(v.0.0.4)
+ *  LG Warsher(v.0.0.5)
  *
  * MIT License
  *
@@ -29,6 +29,8 @@
  
 import groovy.json.JsonSlurper
 import groovy.transform.Field
+import groovy.time.TimeCategory
+import java.text.SimpleDateFormat
 
 @Field
 STATE_VALUE = [
@@ -58,11 +60,10 @@ STATE_VALUE = [
 ]
 
 metadata {
-	definition (name: "LG Washer", namespace: "fison67", author: "fison67") {
+	definition (name: "LG Washer", namespace: "fison67", author: "fison67", ocfDeviceType:"oic.d.dishwasher") {
         capability "Switch"
         capability "Sensor"
-        capability "Switch Level"
-        capability "Configuration"
+        capability "Washer Operating State"
         
         command "setStatus"
         
@@ -91,9 +92,6 @@ metadata {
 			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
     			attributeState("default", label:'Updated: ${currentValue}')
             }
-            tileAttribute ("device.level", key: "SLIDER_CONTROL") {
-                attributeState "level", action:"setLevel"
-            }     
 		}
         
         valueTile("curState_label", "", decoration: "flat", width: 3, height: 1) {
@@ -157,12 +155,15 @@ def parse(String description) {
 }
 
 def updated() {
+    log.debug "updated"
 }
 
 def setInfo(String app_url, String address) {
 	log.debug "${app_url}, ${address}"
 	state.app_url = app_url
     state.id = address
+    
+    sendEvent(name:"supportedMachineStates", value: ["run", "stop"])
 }
 
 def setData(dataList){
@@ -179,8 +180,11 @@ def setStatus(data){
     if(jsonObj.State != null){
     	if(jsonObj.State.value as int == 0){
         	sendEvent(name:"switch", value: "off")
+        	sendEvent(name:"machineState", value: "stop")
+            
         }else{
         	sendEvent(name:"switch", value: "on")
+        	sendEvent(name:"machineState", value: "run")
         }
         sendEvent(name:"curState", value: STATE_VALUE[jsonObj.State.value as int]["str"][language])
     }
@@ -238,6 +242,15 @@ def setStatus(data){
 	}
    
     sendEvent(name:"leftTime", value: state.remainTimeH + ":" + state.remainTimeM + ":00")
+    def currentTime = new Date()
+    use( TimeCategory ) {
+        currentTime = currentTime + (state.remainTimeH as int).hours
+        currentTime = currentTime + (state.remainTimeM as int).minutes
+    }
+    
+    def dateStr = currentTime.format("yyyy-MM-dd'T'HH:mm:ss+09:00", location.timeZone)
+    sendEvent(name:"completionTime", value: dateStr, displayed: false)
+    
     if(jsonObj.Remain_Time_H != null){
     	sendEvent(name:"leftMinute", value: jsonObj.Remain_Time_H.value * 60 + jsonObj.Remain_Time_M.value)
     }
