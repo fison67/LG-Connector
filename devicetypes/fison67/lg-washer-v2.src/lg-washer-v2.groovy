@@ -28,14 +28,14 @@
 */
  
 import groovy.json.JsonSlurper
+import groovy.time.TimeCategory
 
 
 metadata {
 	definition (name: "LG Washer v2", namespace: "fison67", author: "fison67") {
         capability "Switch"
         capability "Sensor"
-        capability "Switch Level"
-        capability "Configuration"
+        capability "Washer Operating State"
         
         command "setStatus"
         
@@ -148,15 +148,14 @@ def setStatus(data){
         	if(report.washerDryer.state != null){
         		sendEvent(name:"processState", value: getStateStr(report.washerDryer.state))
                 sendEvent(name:"switch", value: report.washerDryer.state == "POWEROFF" ? "off" : "on")
-                
+                setState(report.washerDryer.state)
             }
             
             if(report.washerDryer.temp != null){
             	def temp = report.washerDryer.temp.split("_")[1]
         		sendEvent(name:"targetTemperature", value: (report.washerDryer.temp == "NO_TEMP" ? "NO" : temp) )
             }
-            
-            
+                        
             /**
             * Set a time
             */
@@ -169,10 +168,46 @@ def setStatus(data){
     		sendEvent(name:"leftTime", value: changeTime(state.remainTimeHour as int) + ":" + changeTime(state.remainTimeMinue as int) + ":00", displayed: false)
             sendEvent(name:"leftMinute", value: (state.remainTimeHour as int) * 60 + (state.remainTimeMinue as  int), displayed: false)
             
+            def currentTime = new Date()
+            use( TimeCategory ) {
+                currentTime = currentTime + (state.remainTimeHour as int).hours
+                currentTime = currentTime + (state.remainTimeMinue as int).minutes
+            }
+
+            def dateStr = currentTime.format("yyyy-MM-dd'T'HH:mm:ss+09:00", location.timeZone)
+            sendEvent(name:"completionTime", value: dateStr, displayed: false)
         }
     }
     
     updateLastTime();
+}
+
+def setState(state){
+    def value = "none"
+    switch(state){
+    case "POWEROFF":
+    	value = "finish"
+    	break
+    case "DETECTING":
+    	value = "weightSensing"
+    	break
+    case "RUNNING":
+    	value = "wash"
+    	break
+    case "RINSING":
+    	value = "rinse"
+    	break
+    case "SPINNING":
+    	value = "spin"
+    	break
+    case "DRYING":
+    	value = "drying"
+    	break
+    case "FRESHCARE":
+    	value = "wrinklePrevent"
+    	break
+    }
+    sendEvent(name:"washerJobState", value: value)
 }
 
 def changeTime(time){
