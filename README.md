@@ -184,7 +184,7 @@ Loop until all of file is registered
 ```
 
 ## Install SmartApp
-See the [Manual](doc/install/smartapp/README.md) file for details
+
 ```
 Connect to the SmartThings IDE
 Click My SmartApps
