@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.11)
+ *  LG Connector (v.0.0.12)
  *
  * MIT License
  *
@@ -197,6 +197,7 @@ def addDevice(){
     log.debug("DNI >> " + dni)
     def chlid = getChildDevice(dni)
     if(!child){
+    	def namespace = "fison67"
         def dth = ""
         if(type == "tv"){
         	dth = "LG TV"
@@ -220,8 +221,11 @@ def addDevice(){
         	dth = "LG Code Zero"
         }else if(type == "styler"){
         	dth = "LG Styler"
-        }else if(type == "oven"){
-        	dth = "LG Oven"
+        }else if(type == "water_purifier"){
+        	dth = "LG Water Purifier"
+        }else if(type == "dishwasher"){
+        	namespace = "streamorange58819"
+        	dth = "LG DishWasher"
         }
         def label = dth
         if(name != null){
@@ -234,7 +238,7 @@ def addDevice(){
         log.debug "DTH : " + dth
         
         if(dth != ""){
-        	def childDevice = addChildDevice("fison67", dth, dni, location.hubs[0].id, [
+        	def childDevice = addChildDevice(namespace, dth, dni, location.hubs[0].id, [
                 "label": label
             ])    
             childDevice.setInfo(settings.address, address)
