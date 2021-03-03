@@ -1,5 +1,5 @@
 /**
- *  LG Cooktop v2(v.0.0.1)
+ *  LG Cooktop v2(v.0.0.2)
  *
  * MIT License
  *
@@ -52,6 +52,7 @@ def parse(String description) {
 }
 
 def installed(){
+	state.prvFanSpeed = 0
     sendEvent(name:"switch", value:"off")
 }
 
@@ -66,17 +67,17 @@ def setInfo(String app_url, String address) {
 }
 
 def on(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + 1 + '}')
-    sendEvent(name: 'fanSpeed', value: (state.prvFanSpeed as int))
+	_processFanSpeed("on")
+    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":"1"}')
 }
 
 def off(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":' + 0 + '}')
+	_processFanSpeed("off")
+    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"airState.operation","dataValue":"0"}')
 }
 
 def setFanSpeed(speed){
 	if(speed == 0){
-    	state.prvFanSpeed = device.currentValue('fanSpeed')
 		off()
     }else if(speed == 1){
 		wind(wind1 == null ? 2 : wind1)
@@ -86,6 +87,15 @@ def setFanSpeed(speed){
 		wind(wind3 == null ? 6 : wind3)
     }else if(speed == 4){
 		wind(wind4 == null ? 7 : wind4)
+    }
+}
+
+def _processFanSpeed(power){
+	if(power == "on"){
+    	sendEvent(name: 'fanSpeed', value: (state.prvFanSpeed as int))
+    }else if(power == "off"){
+		state.prvFanSpeed = device.currentValue('fanSpeed')
+    	sendEvent(name:"fanSpeed", value: 0)
     }
 }
 
@@ -100,25 +110,25 @@ def setStatus(data){
     if(jsonObj.data.state.reported != null){
     	def report = jsonObj.data.state.reported
         
-        if(report.airState != null){
-            if(report.airState["operation"] != null){
-            	sendEvent(name:"switch", value: report.airState["operation"] == 1 ? "on" : "off")
+        if(report["airState.operation"] != null){
+        	def power = report["airState.operation"] == 1 ? "on" : "off"
+            sendEvent(name:"switch", value: power)
+            _processFanSpeed(power)
+        }
+        
+        if(report["airState.windStrength"] != null){
+            def fanSpeed = report["airState.windStrength"]
+            def speed = 0
+            if(fanSpeed == wind1){
+                speed = 1
+            }else if(fanSpeed == wind2){
+                speed = 2
+            }else if(fanSpeed == wind3){
+                speed = 3
+            }else if(fanSpeed == wind4){
+                speed = 4
             }
-            
-            if(report.airState["windStrength"] != null){
-            	def fanSpeed = report.airState["windStrength"]
-                def speed = 0
-                if(fanSpeed == wind1){
-                	speed = 1
-                }else if(fanSpeed == wind2){
-                	speed = 2
-                }else if(fanSpeed == wind3){
-                	speed = 3
-                }else if(fanSpeed == wind4){
-                	speed = 4
-                }
-            	sendEvent(name:"fanSpeed", value: speed)
-            }
+            sendEvent(name:"fanSpeed", value: speed)
         }
     }
     
