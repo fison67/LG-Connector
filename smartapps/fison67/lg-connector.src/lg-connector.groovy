@@ -228,6 +228,8 @@ def addDevice(){
         	dth = "LG DishWasher"
         }else if(type == "cooktop"){
         	dth = "LG Cooktop"
+        }else if(type == "ceiling_fan"){
+        	dth = "LG Ceiling Fan"
         }
         def label = dth
         if(name != null){
