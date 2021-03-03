@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.12)
+ *  LG Connector (v.0.0.13)
  *
  * MIT License
  *
@@ -226,6 +226,8 @@ def addDevice(){
         }else if(type == "dishwasher"){
         	namespace = "streamorange58819"
         	dth = "LG DishWasher"
+        }else if(type == "cooktop"){
+        	dth = "LG Cooktop"
         }
         def label = dth
         if(name != null){
