@@ -1,5 +1,5 @@
 /**
- *  LG Styler v2(v.0.0.1)
+ *  LG Styler v2(v.0.0.2)
  *
  * MIT License
  *
@@ -43,45 +43,10 @@ metadata {
         attribute "course", "string"
 	}
 
-	simulator {
-	}
+	simulator {}
     
 	preferences {
         input name: "language", title:"Select a language" , type: "enum", required: true, options: ["EN", "KR"], defaultValue: "KR", description:"Language for DTH"
-	}
-
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"switch", type: "generic", width: 6, height: 2){
-			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState("on", label:'${name}', backgroundColor:"#00a0dc", icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
-                attributeState("off", label:'${name}', backgroundColor:"#ffffff",  icon:"https://github.com/fison67/LG-Connector/blob/master/icons/lg-washer.png?raw=true")
-			}
-            
-			tileAttribute("device.lastCheckin", key: "SECONDARY_CONTROL") {
-    			attributeState("default", label:'Updated: ${currentValue}')
-            }
-		}
-        valueTile("processState_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Process State'
-        }
-        valueTile("processState", "device.processState", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("course_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Course'
-        }
-        valueTile("course", "device.course", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("leftTime_label", "", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'Left Time'
-        }
-        valueTile("leftTime", "device.leftTime", decoration: "flat", width: 3, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        
-        
 	}
 }
 
@@ -167,8 +132,8 @@ def setStatus(data){
         
         if(report.styler != null){
         	if(report.styler.state != null){
-        		sendEvent(name:"processState", value: getStateStr(report.washerDryer.state))
-                sendEvent(name:"switch", value: report.washerDryer.state == "POWEROFF" ? "off" : "on")
+        		sendEvent(name:"processState", value: getStateStr(report.styler.state))
+                sendEvent(name:"switch", value: report.styler.state == "POWEROFF" ? "off" : "on")
             }
             
             if(report.styler.course != null){
@@ -178,19 +143,17 @@ def setStatus(data){
             /**
             * Set a time
             */
-        	if(report.washerDryer.remainTimeMinute != null){
-            	state.remainTimeMinue = report.washerDryer.remainTimeMinute
+        	if(report.styler.remainTimeMinute != null){
+            	state.remainTimeMinue = report.styler.remainTimeMinute
             }
-        	if(report.washerDryer.remainTimeHour != null){
-            	state.remainTimeHour = report.washerDryer.remainTimeHour
+        	if(report.styler.remainTimeHour != null){
+            	state.remainTimeHour = report.styler.remainTimeHour
             }
     		sendEvent(name:"leftTime", value: changeTime(state.remainTimeHour as int) + ":" + changeTime(state.remainTimeMinue as int) + ":00", displayed: false)
             sendEvent(name:"leftMinute", value: (state.remainTimeHour as int) * 60 + (state.remainTimeMinue as  int), displayed: false)
             
         }
     }
-    
-    updateLastTime();
 }
 
 def changeTime(time){
@@ -198,9 +161,4 @@ def changeTime(time){
     	return "0" + time
     }
     return "" + time
-}
-
-def updateLastTime(){
-	def now = new Date().format("yyyy-MM-dd HH:mm:ss", location.timeZone)
-    sendEvent(name: "lastCheckin", value: now, displayed:false)
 }
