@@ -1,5 +1,5 @@
 /**
- *  LG Air Conditioner v2(v.0.0.1)
+ *  LG Air Conditioner v2(v.0.0.2)
  *
  * MIT License
  *
@@ -228,115 +228,6 @@ metadata {
         input name: "wind5", title:"Wind#5 Type" , type: "number", required: false, defaultValue: 1279
         input name: "wind6", title:"Wind#6 Type" , type: "number", required: false, defaultValue: 65284
 	}
-
-	tiles(scale: 2) {
-		
-        multiAttributeTile(name:"thermostatFull", type: "thermostat", width: 6, height: 2){
-
-            tileAttribute("device.temperature", key: "PRIMARY_CONTROL") {
-				attributeState("temperature", label:'${currentValue}°',
-					backgroundColors: [
-						// Celsius
-						[value: 0, color: "#153591"],
-						[value: 7, color: "#1e9cbb"],
-						[value: 15, color: "#90d2a7"],
-						[value: 23, color: "#44b621"],
-						[value: 28, color: "#f1d801"],
-						[value: 35, color: "#d04e00"],
-						[value: 37, color: "#bc2323"],
-						// Fahrenheit
-						[value: 40, color: "#153591"],
-						[value: 44, color: "#1e9cbb"],
-						[value: 59, color: "#90d2a7"],
-						[value: 74, color: "#44b621"],
-						[value: 84, color: "#f1d801"],
-						[value: 95, color: "#d04e00"],
-						[value: 96, color: "#bc2323"]
-					]
-				)
-			}
-            tileAttribute("device.thermostatOperatingState", key: "OPERATING_STATE") {
-				attributeState("idle", backgroundColor: "#cccccc")
-				attributeState("cooling", backgroundColor: "#00A0DC")
-			}
-			tileAttribute("device.thermostatMode", key: "THERMOSTAT_MODE") {
-				attributeState("off", action: "setThermostatMode", label: "Off", icon: "st.thermostat.heating-cooling-off")
-				attributeState("cool", action: "setThermostatMode", label: "Cool", icon: "st.thermostat.cool")
-			}
-            tileAttribute("device.humidity", key: "SECONDARY_CONTROL") {
-                attributeState("humidity", label:'${currentValue}%', unit:"%", defaultState: true)
-            }
-            tileAttribute("device.coolingSetpoint", key: "VALUE_CONTROL") {
-                attributeState("VALUE_UP", action: "tempUp")
-                attributeState("VALUE_DOWN", action: "tempDown")
-            }
-            tileAttribute("device.coolingSetpoint", key: "COOLING_SETPOINT") {
-                attributeState("coolingSetpoint", label:'${currentValue}', unit:"dF", defaultState: true)
-            }
-		}
-        
-        standardTile("thermostatMode2", "device.thermostatMode", inactiveLabel: false, width: 2, height: 2) {
-            state "cool", label:'COOL', action:"off", backgroundColor:"#73C1EC", nextState:"off"
-            state "off", label:'OFF', action:"cool", backgroundColor:"#ffffff", nextState:"cool"
-        }
-        
-        valueTile("mode", "device.mode", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        valueTile("wind", "device.wind", decoration: "flat", width: 4, height: 1) {
-            state "default", label:'${currentValue}'
-        }
-        standardTile("coolMode", "device.coolMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Cool", action: "coolMode"
-		}
-        standardTile("dryMode", "device.dryMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Dry", action: "dryMode"
-		}
-        standardTile("aiMode", "device.aiMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "AI", action: "aiMode"
-		}
-        standardTile("heatMode", "device.heatMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Heat", action: "heatMode"
-		}
-        standardTile("airCleanMode", "device.airCleanMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Air Clean", action: "airCleanMode"
-		}
-        standardTile("acoMode", "device.acoMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "ACO", action: "acoMode"
-		}
-        standardTile("aromaMode", "device.aromaMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Aroma", action: "aromaMode"
-		}
-        standardTile("evenrgySaveMode", "device.evenrgySaveMode", decoration: "flat", height: 1, width: 2) {
-			state "default", label: "Energy Save", action: "evenrgySaveMode"
-		}
-        
-        standardTile("empty", "", decoration: "flat", height: 1, width: 2) {
-			state "default", label: ""
-		}
-        valueTile("wind1", "device.wind1", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind1"
-		}
-        valueTile("wind2", "device.wind2", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind2"
-		}
-        valueTile("wind3", "device.wind1", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind3"
-		}
-        valueTile("wind4", "device.wind4", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind4"
-		}
-        valueTile("wind5", "device.wind5", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind5"
-		}
-        valueTile("wind6", "device.wind6", decoration: "flat", height: 1, width: 2) {
-			state "default", label:'${currentValue}', action: "wind6"
-		}
-        
-        main (["thermostatMode2"])
-        details(["thermostatFull", "thermostatMode2", "mode", "wind", "coolMode", "dryMode", "aiMode", "heatMode", "airCleanMode", "acoMode", "aromaMode", "evenrgySaveMode",
-        "empty", "wind1", "wind2", "wind3", "wind4", "wind5", "wind6"])
-	}
 }
 
 // parse events into attributes
@@ -374,9 +265,22 @@ def setStatus(data){
         
         if(report["airState.operation"] != null){
     		sendEvent(name: "switch", value: report["airState.operation"] == 0 ? "off" : "on")
+            def thermostatMode = "cool"
+            def thermostatOperatingState = "cooling"
+            if(state.lastOpMode == 0){
+            	thermostatMode = "cool"
+                thermostatOperatingState = "cooling"
+            }else if(state.lastOpMode == 4){
+            	thermostatMode = "heat"
+                thermostatOperatingState = "heating"
+            }
+            sendEvent(name: "thermostatOperatingState", value: thermostatOperatingState)
+            sendEvent(name: "thermostatMode", value: thermostatMode)
         }
         
         if(report["airState.opMode"] != null){
+        	state.lastOpMode =  report["airState.opMode"]
+            
             sendEvent(name: "mode", value: OP_MODE_VALUE[report["airState.opMode"]]["str"][language])
             sendEvent(name: "airConditionerMode", value: OP_MODE_VALUE[report["airState.opMode"]]["str"]["EN"])
             
@@ -398,7 +302,7 @@ def setStatus(data){
         }
         
         if(report["airState.tempState.current"] != null){
-        	sendEvent(name: "temperature", value: report["airState.tempState.current"], displayed: false)
+        	sendEvent(name: "temperature", value: report["airState.tempState.current"], unit: "C", displayed: false)
         }
         
         if(report["airState.tempState.target"] != null){
