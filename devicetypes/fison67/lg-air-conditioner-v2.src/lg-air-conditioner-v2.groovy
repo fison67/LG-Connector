@@ -274,8 +274,14 @@ def setStatus(data){
             	thermostatMode = "heat"
                 thermostatOperatingState = "heating"
             }
+            if(report["airState.operation"] == 0){
+            	thermostatOperatingState = "idle"
+            	thermostatMode = "off"
+            }
+            
             sendEvent(name: "thermostatOperatingState", value: thermostatOperatingState)
             sendEvent(name: "thermostatMode", value: thermostatMode)
+            
         }
         
         if(report["airState.opMode"] != null){
