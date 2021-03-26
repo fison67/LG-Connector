@@ -91,7 +91,7 @@ def setStatus(data){
 def setRobotCleanerMovement(movement){
 	log.debug "setRobotCleanerMovement: " + movement
 	if(movemoent == "charging"){
-    	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"HOMING"}')
+    	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl", "dataValue":"HOMING"}')
     }else if(movement == "powerOff" || movement == "idle"){
     	off()
     }else if(movement == "cleaning"){
@@ -100,11 +100,11 @@ def setRobotCleanerMovement(movement){
 }
 
 def on(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"CLEAN_START"}')
+    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl", "dataValue":"CLEAN_START"}')
 }
 
 def off(){
-    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"PAUSE"}')
+    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl", "dataValue":"PAUSE"}')
 }
 
 def control(cmd, value){
