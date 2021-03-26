@@ -33,7 +33,10 @@ import groovy.transform.Field
 metadata {
 	definition (name: "LG Robot Cleaner v2", namespace: "fison67", author: "fison67", ocfDeviceType:"oic.d.robotcleaner") {
         capability "Switch"
+        capability "Battery"
         capability "Robot Cleaner Movement"
+        
+        command "pause"        
 	}
 
 	simulator {}
@@ -46,6 +49,7 @@ def parse(String description) {}
 def installed(){
 	sendEvent(name:"switch", value: "off")
     sendEvent(name:"robotCleanerMovement", value:"powerOff")
+    sendEvent(name:"battery", value: 0, unit:"%" )
 }
 
 def updated() {}
@@ -82,7 +86,11 @@ def setStatus(data){
 			if(mode){
             	sendEvent(name:"robotCleanerMovement", value: mode)
             }
-            sendEvent(name:"switch", value: report["ROBOT_STATE"] != "SLEEP" ? "on" : "off")
+            sendEvent(name:"switch", value: (report["ROBOT_STATE"] == "SLEEP" || report["ROBOT_STATE"] ==  "CHARGING") ? "off" : "on")
+        }
+        
+        if(report["BATT"] != null){
+        	sendEvent(name:"battery", value: report["BATT"] as int, unit: "%")
         }
     }
     
@@ -90,21 +98,27 @@ def setStatus(data){
 
 def setRobotCleanerMovement(movement){
 	log.debug "setRobotCleanerMovement: " + movement
-	if(movemoent == "charging"){
-    	makeCommand('', '{"command":"SetHoming","ctrlKey":"Control", "dataValue":"HOMING"}')
-    }else if(movement == "powerOff" || movement == "idle"){
-    	off()
+    if(movement == "charging" || movement == "powerOff" || movement == "idle"){
+    	charge()
     }else if(movement == "cleaning"){
     	on()
     }
 }
 
+def charge(){
+	makeCommand('', '{"command":"Set","ctrlKey":"Control", "dataValue":"HOMING"}')
+}
+
 def on(){
-    makeCommand('', '{"command":"SetCleanStart","ctrlKey":"Control", "dataValue":"CLEAN_START"}')
+    makeCommand('', '{"command":"Set","ctrlKey":"Control", "dataValue":"CLEAN_START"}')
 }
 
 def off(){
-    makeCommand('', '{"command":"SetPause","ctrlKey":"Control", "dataValue":"PAUSE"}')
+    charge()
+}
+
+def pause(){
+    makeCommand('', '{"command":"Set","ctrlKey":"Control", "dataValue":"PAUSE"}')
 }
 
 def control(cmd, value){
