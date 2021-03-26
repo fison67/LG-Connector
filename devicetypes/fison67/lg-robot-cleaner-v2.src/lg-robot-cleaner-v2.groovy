@@ -91,7 +91,7 @@ def setStatus(data){
 def setRobotCleanerMovement(movement){
 	log.debug "setRobotCleanerMovement: " + movement
 	if(movemoent == "charging"){
-		makeCommand("SetHoming", "HOMING")
+    	makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"HOMING"}')
     }else if(movement == "powerOff" || movement == "idle"){
     	off()
     }else if(movement == "cleaning"){
@@ -100,16 +100,17 @@ def setRobotCleanerMovement(movement){
 }
 
 def on(){
-    makeCommand("SetCleanStart", "CLEAN_START")
+    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"CLEAN_START"}')
 }
 
 def off(){
-	makeCommand("SetPause", "PAUSE")
+    makeCommand('', '{"command":"Set","ctrlKey":"basicCtrl","dataKey":"PAUSE"}')
 }
 
 def control(cmd, value){
 	makeCommand(cmd, value)
 }
+
 
 def makeCommand(command, value){
     def body = [
@@ -124,7 +125,7 @@ def makeCommand(command, value){
 def _makeCommand(body){
 	def options = [
      	"method": "POST",
-        "path": "/devices/control",
+        "path": "/devices/control2",
         "headers": [
         	"HOST": parent.getServerAddress(),
             "Content-Type": "application/json"
