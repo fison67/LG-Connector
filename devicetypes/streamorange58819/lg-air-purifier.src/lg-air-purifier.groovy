@@ -157,7 +157,7 @@ def getModeStr(data){
     	return "sleep"
     }else if(data == 11){
     	return "silent"
-    }else if(data == 12){
+    }else if(data == 29){
     	return "humidity"
     }else if(data == 13){
     	return "clean booster"
@@ -167,8 +167,6 @@ def getModeStr(data){
     	return "dual clean"
     }else if(data == 16){
     	return "auto"
-    }else if(data == 29){
-    	return "humidity"
     }
 }
 
@@ -201,8 +199,6 @@ def getWindInt(data){
     	return 12
     }else if(data == "fast wind"){
     	return 13
-    }else if(data == "fast wind"){
-    	return 29
     }
 }
 
@@ -232,7 +228,7 @@ def getModeInt(data){
     }else if(data == "silent"){
     	return 11
     }else if(data == "humidity"){
-    	return 12
+    	return 29
     }else if(data == "clean booster"){
     	return 13
     }else if(data == "baby care"){
