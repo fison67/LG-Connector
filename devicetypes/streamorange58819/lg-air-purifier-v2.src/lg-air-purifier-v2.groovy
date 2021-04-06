@@ -70,16 +70,16 @@ WIND_VALUE = [
 ]
 
 metadata {
-	definition (name: "LG Air PuriFier v2", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid: "cac22193-8ffa-3599-8463-e0a2693692c2", ocfDeviceType:"oic.d.airpurifier") {
+	definition (name: "LG Air PuriFier v2", namespace: "streamorange58819", author: "fison67", mnmn:"fison67", vid: "35542fbd-0129-39aa-9793-82ec4716c216", ocfDeviceType:"oic.d.airpurifier") {
         capability "Switch"
         capability "Temperature Measurement"
         capability "Relative Humidity Measurement"
+        capability "Very Fine Dust Sensor"
         capability "Dust Sensor"
         capability "Fan Speed"
         capability "streamorange58819.amode"
         capability "Refresh"
         
-        attribute "pm1", "number"
         attribute "airRemoval", "string"
         
         command "airRemovalOff"
@@ -102,16 +102,13 @@ def parse(String description) {
 }
 
 def installed(){
-    sendEvent(name:"supportedAmodes", value: ["off", "fan", "clean", "humidity"])
+    // "off", "dry", "fan", "ai", "heat", "air clean", "aco", "aroma", "energy saving", "clean", "sleep", "silent", "humidity", "clean booster", "baby care", "dual clean", "auto"
+    sendEvent(name:"supportedAmodes", value: ["clean", "humidity", "silent"])
     sendEvent(name:"fanSpeed", value: 0)
 }
 
 def updated() {
 	log.debug "updated"
-    
-    // "off", "dry", "fan", "ai", "heat", "air clean", "aco", "aroma", "energy saving", "clean", "sleep", "silent", "humidity", "clean booster", "baby care", "dual clean", "auto"
-    sendEvent(name:"supportedAmodes", value: ["off", "fan", "clean", "humidity"])
-    sendEvent(name:"fanSpeed", value: 0)
 }
 
 def setInfo(String app_url, String address) {
@@ -190,7 +187,6 @@ def getWindInt(data){
     }
 }
 
-
 def getModeInt(data){
 	if(data == "off"){
     	return 0
@@ -258,7 +254,7 @@ def setStatus(data){
         }
         
         if(report["airState.quality.PM1"] != null){
-        	sendEvent(name: "pm1", value: report["airState.quality.PM1"], unit:"μg/m^3")
+        	sendEvent(name: "veryFineDustLevel", value: report["airState.quality.PM1"], unit:"μg/m^3")
         }
         if(report["airState.quality.PM10"] != null){
         	sendEvent(name: "dustLevel", value: report["airState.quality.PM10"], unit:"μg/m^3")
