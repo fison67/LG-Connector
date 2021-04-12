@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.13)
+ *  LG Connector (v.0.0.14)
  *
  * MIT License
  *
@@ -52,10 +52,19 @@ preferences {
 def mainPage() {
 	def languageList = ["English", "Korean"]
     dynamicPage(name: "mainPage", title: "LG Connector", nextPage: null, uninstall: true, install: true) {
+    	
+    	if(location.hubs.size() < 1) {
+            section() {
+                paragraph "[ERROR]\nSmartThings Hub not found.\nYou need a SmartThings Hub to use LG-Connector."
+            }
+            return
+        }
+        
    		section("Request New Devices"){
         	input "address", "text", title: "Server address", required: true
         	input "address2", "text", title: "Port forwarding Server address", required: false
             input(name: "selectedLang", title:"Select a language" , type: "enum", required: true, options: languageList, defaultValue: "English", description:"Language for DTH")
+            input "devHub", "enum", title: "Hub", required: true, multiple: false, options: getHubs()
         	href url:"http://${settings.address}", style:"embedded", required:false, title:"Local Management", description:"This makes you easy to setup"
         	href url:"http://${settings.address2}", style:"embedded", required:false, title:"External Management", description:"This makes you easy to setup"
         }
@@ -201,13 +210,13 @@ def addDevice(){
         def dth = ""
         if(type == "tv"){
         	dth = "LG TV"
-        }else if(type == "washer"){
+        }else if(type == "washer" || type == "wash_tower_washer"){
         	dth = "LG Washer"
         }else if(type == "refrigerator"){
         	dth = "LG Refrigerator"
         }else if(type == "ac"){
         	dth = "LG Air Conditioner"
-        }else if(type == "dryer"){
+        }else if(type == "dryer" || type == "wash_tower_dryer"){
         	dth = "LG Dryer"
         }else if(type == "air_purifier"){
         	dth = "LG Air PuriFier"
@@ -231,6 +240,7 @@ def addDevice(){
         }else if(type == "ceiling_fan"){
         	dth = "LG Ceiling Fan"
         }
+        
         def label = dth
         if(name != null){
         	label = name
@@ -242,7 +252,7 @@ def addDevice(){
         log.debug "DTH : " + dth
         
         if(dth != ""){
-        	def childDevice = addChildDevice(namespace, dth, dni, location.hubs[0].id, [
+        	def childDevice = addChildDevice(namespace, dth, dni, getLocationID(), [
                 "label": label
             ])    
             childDevice.setInfo(settings.address, address)
@@ -306,6 +316,30 @@ def renderConfig() {
 
     def configString = new groovy.json.JsonOutput().prettyPrint(configJson)
     render contentType: "text/plain", data: configString
+}
+
+def getLocationID(){
+	def locationID = null
+    try{ locationID = getHubID(devHub) }catch(err){}
+    return locationID
+}
+
+def getHubs(){
+	def list = []
+    location.getHubs().each { hub ->
+    	list.push(hub.name)
+    }
+    return list
+}
+
+def getHubID(name){
+	def id = null
+    location.getHubs().each { hub ->
+    	if(hub.name == name){
+        	id = hub.id
+        }
+    }
+    return id
 }
 
 mappings {
