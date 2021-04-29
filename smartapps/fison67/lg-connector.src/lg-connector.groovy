@@ -1,5 +1,5 @@
 /**
- *  LG Connector (v.0.0.14)
+ *  LG Connector (v.0.0.15)
  *
  * MIT License
  *
@@ -239,7 +239,9 @@ def addDevice(){
         	dth = "LG Cooktop"
         }else if(type == "ceiling_fan"){
         	dth = "LG Ceiling Fan"
-        }
+        }else if(type == "oven"){
+        	dth = "LG Oven"
+	}
         
         def label = dth
         if(name != null){
